@@ -6,50 +6,10 @@ import { useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactHtmlParser from "react-html-parser";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "150mm",
-  height: "150mm",
-  bgcolor: "background.paper",
-  border: "none",
-  borderRadius: "5px",
-  background: "linear-gradient(pink,rgba(244, 241, 241, 0.75))",
-  boxShadow: 24,
-  p: 5,
-};
-
-//array of users
-const users = [
-  { id: 1, name: "..select.." },
-  {
-    id: 2,
-    name: "EXECUTIVE DIRECTOR",
-  },
-  {
-    id: 3,
-    name: "MANAGING DIRECTOR",
-  },
-  {
-    id: 4,
-    name: "HR MANAGER",
-  },
-  {
-    id: 5,
-    name: "CFO",
-  },
-  {
-    id: 6,
-    name: "HEAD OF IT DEPARTMENT",
-  },
-  {
-    id: 7,
-    name: "HEAD OF MARKETING",
-  },
-];
+import { style } from "./boxstyle";
+import { users } from "./userData";
+import avatar from "../../assets/sig.JPG"
+import file from "../../assets/scan.pdf"
 export const Memo = () => {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
@@ -59,7 +19,7 @@ export const Memo = () => {
   const [date, setDate] = useState("");
   const [signature, setSignature] = useState("");
   const [attachment, setAttachment] = useState("");
-console.log(attachment)
+
   const handleOpen = (e) => {
     e.preventDefault();
     setOpen(true);
@@ -80,10 +40,9 @@ console.log(attachment)
         aria-describedby="modal-modal-description"
       >
         {/* content display */}
-
         <Box className="box-main" sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            MEMO
+            MEMO (ID: loyalty-652-2022)
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <div className="header">
@@ -100,15 +59,25 @@ console.log(attachment)
             <div className="content-details">
               {/* content */}
               <div> {ReactHtmlParser(content)}</div>
+
               {/* end of content */}
-              <div className="content-attachement"> Files:{attachment}</div>
+              <div className="content-attachement"> Files:{file}</div>
             </div>
             <div
               className="sign"
               style={{ display: "flex", flexDirection: "column" }}
             >
               <p>Thank You</p>
-              <span> Signature: {signature}</span>
+              <span style={{display:'flex',flexDirection:'column'}}>
+                {" "}
+                signature:
+                <img
+                  src={avatar}
+                  alt="signature"
+                  style={{ width: "50px", height: "50px",objectFit:'contain' }}
+                />{" "}
+                
+              </span>
               <p style={{ fontSize: "12px" }}>( DANIEL K. NAGAI )</p>
             </div>
           </Typography>

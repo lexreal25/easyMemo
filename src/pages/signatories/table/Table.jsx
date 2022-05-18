@@ -1,10 +1,10 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import "./table.css";
-import { rows } from "../../dummyData"
+import { rows } from "../../../dummyData"
 const columns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "date", headerName: "Date", width: 90, type: "date" },
+  { field: "date", headerName: "Name", width: 90, type: "text" },
   { field: "to", headerName: "Sent By", width: 200, type: "text" },
   { field: "from", headerName: "Set To", width: 150, type: "text" },
   {
@@ -24,7 +24,7 @@ const columns = [
     renderCell: (params) => {
       return (
         <>
-          <Link to={"/memo/"+params.row.id}>
+          <Link to={"/edit/"+params.row.id}>
             <button className="memo-view">VIEW</button>
           </Link>
         </>

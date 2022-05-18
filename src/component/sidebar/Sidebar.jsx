@@ -49,22 +49,22 @@ export const Sidebar = () => {
                 <span className="menu-item">CREATE MEMO</span>
               </Link>
             </li>
-            <li className="sidebarItems">
+            {/* <li className="sidebarItems">
               <Link to="/pending" className="links">
                 <MoreHoriz className="sidebarIcon" />
                 <span className="menu-item">PENDING MEMO</span>
               </Link>
-            </li>
-            <li className="sidebarItems">
+            </li> */}
+            {/* <li className="sidebarItems">
               <Link to="/pending" className="links">
                 <CheckCircleOutline className="sidebarIcon" />
                 <span className="menu-item">APPROVED MEMO</span>
               </Link>
-            </li>
+            </li> */}
             <li className="sidebarItems">
-              <Link to="/signatory" className="links">
+              <Link to="/users" className="links">
                 <Done className="sidebarIcon" />
-                <span className="menu-item">SIGNATORIES</span>
+                <span className="menu-item">USERS</span>
               </Link>
             </li>
             <Link to="/archives" className="links">

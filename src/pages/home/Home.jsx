@@ -6,6 +6,6 @@ export const Home = () => {
     <div className="home">
       {/* <h3>All Memo's</h3> */}
       <Table />
-    </div>
+      </div>
   );
 };
