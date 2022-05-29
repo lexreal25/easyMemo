@@ -1,0 +1,105 @@
+.memo {
+  flex: 4;
+  padding: 10px;
+  margin: 5px;
+  background-color: white;
+  box-shadow: 2px 2px 2px 0px rgba(230, 214, 214, 0.75);
+  -webkit-box-shadow: 2px 4px 5px 0px rgba(230, 214, 214, 0.75);
+  -moz-box-shadow: 2px 4px 5px 0px rgba(230, 214, 214, 0.75);
+}
+.memo-form {
+  height: 100%;
+}
+.memo-div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.memo-div label {
+  font-size: 16px;
+  font-family: "Times New Roman", Times, serif;
+}
+.memo-input {
+  width: 250px;
+  height: 27px;
+  margin-left: 10px;
+  padding: 3px;
+  font-family: "Times New Roman", Times, serif;
+  text-transform: uppercase;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+}
+
+.memo-input:focus {
+  outline: none;
+}
+.to-selector {
+  height: 30px;
+  font-family: "Times New Roman", Times, serif;
+}
+.to-selector:focus {
+  outline: none;
+}
+.to-selector option {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.memo-text-area {
+  flex: 1;
+  justify-content: center;
+  width: 90%;
+  padding: 5px;
+  margin-top: 10px;
+  height: auto;
+  background: rgba(222, 202, 202, 0.75);
+}
+.btn {
+  margin-top: 10px;
+}
+.prev,
+.send {
+  padding: 10px;
+  outline: none;
+  cursor: pointer;
+  font-family: "Times New Roman", Times, serif;
+}
+.prev,
+.send:focus {
+  outline: none;
+}
+.send {
+  margin-left: 10px;
+}
+/***MODAL STYLES****/
+.modal-content {
+  width: 210mm;
+  min-height: 150mm;
+}
+.box-main:focus {
+  outline: none;
+}
+.header p {
+  font-size: 13px;
+  font-family: "Times New Roman", Times, serif;
+  line-height: 10px;
+}
+.pg span{
+  font-size: 12px;
+  border-bottom: 0.5px solid #000;
+  text-transform: uppercase;
+  line-height: 20px;
+  font-weight: 600;
+  word-spacing: 2px;
+}
+/* .content{
+  padding: 2px;
+} */
+.content p{
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 15px;
+}
+.txt {
+  width: 500px;
+  border: none;
+  box-sizing: border-box;
+  border-bottom: 1px solid gray;
+}
