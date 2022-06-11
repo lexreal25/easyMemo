@@ -2,9 +2,6 @@
   flex: 4;
   position: relative;
 }
-/* .memolist-container {
-  position: relative;
-} */
 
 .memo-page {
   display: flex;
@@ -19,6 +16,7 @@
 .memo-details {
   flex: 2;
 }
+
 @page {
   size: A4;
   margin: 0;

@@ -8,22 +8,23 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactHtmlParser from "react-html-parser";
 import { style } from "./boxstyle";
 import { users } from "./userData";
-// import file from "../../assets/scan.pdf";
 import axios from "axios";
 
 export const Memo = () => {
+  const [signature, setSignature] = useState("");
+  const [preview, setPreview] = useState("");
   const [id, setId] = useState("");
   const [open, setOpen] = useState(false);
   const [to, setTo] = useState("");
   const [from, setFrom] = useState("");
   const [subject, setSubject] = useState("");
   const [through, setThrough] = useState("");
+  const [copy, setCopy] = useState("");
   const [content, setContent] = useState("");
   const [date, setDate] = useState("");
   const [files, setFile] = useState("");
-  const [signature, setSignature] = useState("");
-  const [preview, setPreview] = useState("");
-
+  //  const [info, setInfo] = useState("")
+console.log(files)
   useEffect(() => {
     genId();
   }, []);
@@ -33,18 +34,53 @@ export const Memo = () => {
     const val = Math.floor(1000 + Math.random() * 900);
     setId("loyalty-" + val.toString() + "-2022");
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = { id, content, to, from, date, subject };
+    alert("sending...");
+    const sign = new FormData();
+    sign.append("file", signature);
+    sign.append("upload_preset", "upload");
+    //attached documents
     try {
-      const res = axios.post("http://localhost:4000/api/memo/memos", data);
+      const list = await Promise.all(
+       Object.values(files).map(async (file) => {
+          const doc = new FormData();
+          doc.append("file", file);
+          doc.append("upload_preset", "upload");
+          const uploadedRes = await axios.post(
+            "https://api.cloudinary.com/v1_1/lexreal1/image/upload",
+            doc,
+            {reportProgress:true}
+          );
+          const {url} = uploadedRes.data
+          return url;
+        })
+      );
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/lexreal1/image/upload",
+        sign
+      );
+      const { url } = res.data;
       console.log(res.data);
+      const newMemo = {
+        id,
+        content,
+        to,
+        from,
+        date,
+        subject,
+        copy,
+        signature: url,
+        files:list
+      };
+      await axios.post("http://localhost:4000/api/memo/memos", newMemo);
     } catch (err) {
       console.log(err);
     }
-    alert("sending...");
     setTimeout(() => {
       clear();
+      genId();
     }, 3000);
   };
   const clear = () => {
@@ -57,7 +93,8 @@ export const Memo = () => {
       setId(""),
       setSignature(""),
       setSubject(""),
-      setContent("")
+      setContent(""),
+      setCopy("")
     );
   };
 
@@ -72,20 +109,7 @@ export const Memo = () => {
     setContent(data);
   };
 
-  const handleChangeFile = (e) => {
-    e.preventDefault();
-    // let name = e.target.name;
-    // let fileReader = new FileReader();
-    // //get the actual file
-    // let file = e.target.files[0];
-    // fileReader.onload = () => {
-    //   setFile([
-    //     ...files,
-    //     { file_name: name, uploaded_file: fileReader.result },
-    //   ]);
-    // };
-    // fileReader.readAsDataURL(file);
-  };
+
   const handleSignature = (e) => {
     const selectedFile = e.target.files[0];
     setSignature(selectedFile);
@@ -125,10 +149,10 @@ export const Memo = () => {
               <span>{ReactHtmlParser(content)}</span>
 
               {/* end of content */}
-              <div className="content-attachement">
+              {/* <div className="content-attachement">
                 {" "}
-                <span>File</span>:{}
-              </div>
+                <span style={{ fontSize: "12px" }}>File</span>:{files}
+              </div> */}
             </div>
             <div
               className="sign"
@@ -165,6 +189,7 @@ export const Memo = () => {
               className="to-selector"
               onChange={(e) => setTo(e.target.value)}
               value={to}
+              name="to"
             >
               {users.map((user) => (
                 <option
@@ -178,12 +203,24 @@ export const Memo = () => {
             </select>
           </div>
           <div className="memo-div">
+            <label>Cc:</label>
+            <input
+              type="text"
+              className="memo-input"
+              placeholder="If applicable"
+              value={copy}
+              name="copy"
+              onChange={(e) => setCopy(e.target.value)}
+            />
+          </div>
+          <div className="memo-div">
             <label>Through:</label>
             <input
               type="text"
               className="memo-input"
               placeholder="If applicable"
               value={through}
+              name="through"
               onChange={(e) => setThrough(e.target.value)}
             />
           </div>
@@ -193,6 +230,7 @@ export const Memo = () => {
               className="to-selector"
               onChange={(e) => setFrom(e.target.value)}
               value={from}
+              name="from"
             >
               {users.map((user) => (
                 <option key={user.id} value={user.name}>
@@ -205,6 +243,7 @@ export const Memo = () => {
             <label>Date:</label>
             <input
               type="date"
+              name="date"
               className="memo-input"
               value={date}
               onChange={(e) => setDate(e.target.value)}
@@ -216,6 +255,7 @@ export const Memo = () => {
             <label>Subject:</label>
             <input
               type="text"
+              name="subject"
               className="memo-input txt"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
@@ -229,12 +269,11 @@ export const Memo = () => {
             <input
               type="file"
               name="documents"
-              size={10240}
+              size={25600}
               multiple
               accept=".png .jpeg .pdf"
-              className="memo-input"
-              value={files}
-              onChange={handleChangeFile}
+              className="memo-input file"
+              onChange={(e) => setFile(e.target.files)}
             />
           </div>
           <div className="memo-div">
@@ -246,7 +285,7 @@ export const Memo = () => {
               name="signature"
               size={1024}
               className="memo-input"
-              value={signature}
+              // value={signature}
               onChange={handleSignature}
             />
           </div>

@@ -2,13 +2,9 @@ import React from "react";
 import "./sidebar.css";
 import { Link } from "react-router-dom";
 import {
-  CheckCircleOutline,
   Create,
-  Done,
   ExitToApp,
-  History,
   Home,
-  MoreHoriz,
   Settings,
 } from "@material-ui/icons";
 export const Sidebar = () => {
@@ -49,32 +45,8 @@ export const Sidebar = () => {
                 <span className="menu-item">CREATE MEMO</span>
               </Link>
             </li>
-            {/* <li className="sidebarItems">
-              <Link to="/pending" className="links">
-                <MoreHoriz className="sidebarIcon" />
-                <span className="menu-item">PENDING MEMO</span>
-              </Link>
-            </li> */}
-            {/* <li className="sidebarItems">
-              <Link to="/pending" className="links">
-                <CheckCircleOutline className="sidebarIcon" />
-                <span className="menu-item">APPROVED MEMO</span>
-              </Link>
-            </li> */}
             <li className="sidebarItems">
-              <Link to="/users" className="links">
-                <Done className="sidebarIcon" />
-                <span className="menu-item">USERS</span>
-              </Link>
-            </li>
-            <li className="sidebarItems">
-              <Link to="/archives" className="links">
-                <History className="sidebarIcon" />
-                <span className="menu-item">ARCHIVES</span>
-              </Link>
-            </li>
-            <li className="sidebarItems">
-              <Link to="/settings" className="links">
+              <Link to="/edit/:userId" className="links">
                 <Settings className="sidebarIcon" />
                 <span className="menu-item">Settings</span>
               </Link>

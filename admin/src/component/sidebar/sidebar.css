@@ -8,6 +8,7 @@
 .sidebarWrapper {
   padding: 20px;
   color: #555;
+  height: 100vh;
   box-shadow: 2px 2px 2px 0px rgba(230, 214, 214, 0.75);
   -webkit-box-shadow: 2px 4px 5px 0px rgba(230, 214, 214, 0.75);
   -moz-box-shadow: 2px 4px 5px 0px rgba(230, 214, 214, 0.75);

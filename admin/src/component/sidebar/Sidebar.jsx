@@ -24,7 +24,7 @@ export const Sidebar = () => {
               alignItems: "center",
             }}
           >
-            <h3 className="sidebarTitle">Menu |</h3>
+            <h3 className="sidebarTitle">Admin |</h3>
             <li
               className=" active"
               style={{

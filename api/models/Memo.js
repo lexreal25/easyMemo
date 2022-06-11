@@ -6,22 +6,22 @@ const memoSchema = mongoose.Schema(
     to: { type: String, require: true },
     through: { type: String },
     from: { type: String, require: true },
-    date: { type: Date, require: true },
-    subject: { type: String, require: true },
+    date: { type: Date, require: true },  
+    copy: { type: String},
     files: { type: Array },
     signature: { type: String, require: true },
     content: { type: String, require: true },
-    // comment: [{
-    //   memoId:{
-    //     type: String
-    //   },
-    //   message:{
-    //     type:String
-    //   },
-    //   {
-    //     by
-    //   }
-    // }, {timeStamps:true}],
+    comment: [{
+      memoId:{
+        type: String
+      },
+      message:{
+        type:String
+      },
+      by:{
+         type:String
+      }
+    }, {timeStamps:true}],
     name: { type: String },
   },
   { timeStamps: true }

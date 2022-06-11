@@ -6,15 +6,6 @@ const {
   verifyTokenAuthorization,
 } = require("./verifytoken");
 
-//create memo verifyTokenAndAuthorization
-// router.post("/memo", async (req, res) => {
-//   const file = req.files.myfile;
-//   const filepath = path.join(__dirname, "..", "images");
-//   return file.mv(`${filepath}/${file.name}`, (err) => {
-//     if (err) console.log("file was not uploaded");
-//    return res.send({ message: "file upload successful" });
-//   });
-// });
 
 router.post("/memos", async (req, res) => {
 const newMemo = new Memo(req.body)

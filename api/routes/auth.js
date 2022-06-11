@@ -4,13 +4,9 @@ const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 //create user
 router.post("/register", async (req, res) => {
-  const { name, role, id, signature } = req.body;
 
   const newUser = new User({
-    role,
-    name,
-    id,
-    signature,
+    ...req.body,
     password: CryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC),
   });
   try {

@@ -1,18 +1,22 @@
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import {  useState } from "react";
 import "./memolist.css";
 import { style } from "./boxstyle";
 import Typography from "@mui/material/Typography";
 //import ReactHtmlParser from "react-html-parser";
 import { jsPDF } from "jspdf";
 import { AddOutlined } from "@material-ui/icons";
+import { useLocation } from "react-router-dom";
 
 export const MemoList = () => {
   // const [memo, setMemo] = useState("");
   const [open, setOpen] = useState(false);
   const [txt, setText] = useState("");
   const [content, setContent] = useState("");
-
+  
+  const location = useLocation()
+  const productId = location.pathname.split("/")[2]
+ console.log(productId) 
   const download = () => {
     const doc = new jsPDF("portrait", "px", "a4", "false");
     doc.text(60, 60, "hello");
@@ -27,6 +31,7 @@ export const MemoList = () => {
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
+
   return (
     <div className="memolist">
       <div className={open ? "cTxt" : "cT"}>
@@ -43,23 +48,41 @@ export const MemoList = () => {
           <button onClick={handleClose}>X</button>
         </div>
       </div>
-
       <div className="memolist-container">
         <div className="memo-page">
           <div className="memo-details">
             <Box sx={style}>
-              <Typography variant="h6" component="h3">
-                MEMO (ID: loyalty-652-2022)
+              <Typography variant="h6" component="h6">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div> MEMO (ID: loyalty-652-2022)</div>
+                  <div
+                    style={{
+                      fontSize: "10px",
+                      color: "green",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    APPROVED
+                  </div>
+                </div>
               </Typography>
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 <div className="header">
                   <p>TO : EXECUTIVE DIRECTOR</p>
                   <p>FROM : HEAD OF IT DEPARTMENT</p>
-                  <p className="date">DATE : {Date()}</p>
-                  <p style={{ marginTop: "10px" }} className="pg">
+                  <p className="date">
+                    DATE : {new Date().toISOString().split("T")[0]}
+                  </p>
+                  <p style={{ marginTop: "10px"}} className="pg">
                     {" "}
                     SUBJECT :{" "}
-                    <span>
+                    <span style={{fontSize:'13px'}}>
                       REQUEST FOR PAYMENT OF MAINTENANCE FEE TO GEOLET CONSULT
                     </span>
                   </p>
@@ -78,32 +101,6 @@ export const MemoList = () => {
                       how are you doing today and beyond Hello there how are you
                       doing today and beyond Hello there how are you doing today
                       and beyond.
-                    </p>
-                    <p>
-                      Hello there how are you doing today and beyond Hello there
-                      how are you doing today and beyond Hello there how are you
-                      doing today and beyond Hello there how are you doing today
-                      and beyond.
-                    </p>
-                    <p>
-                      Hello there how are you doing today and beyond Hello there
-                      how are you doing today and beyond Hello there how are you
-                      doing today and beyond Hello there how are you doing today
-                      and beyond.
-                    </p>
-                    <p>
-                      Hello there how are you doing today and beyond Hello there
-                      how are you doing today and beyond Hello there how are you
-                      doing today and beyond Hello there how are you doing today
-                      and beyond. Hello there how are you doing today and beyond
-                      Hello there
-                    </p>
-                    <p>
-                      Hello there how are you doing today and beyond Hello there
-                      how are you doing today and beyond Hello there how are you
-                      doing today and beyond Hello there how are you doing today
-                      and beyond. Hello there how are you doing today and beyond
-                      Hello there
                     </p>
                   </div>
 
@@ -146,7 +143,9 @@ export const MemoList = () => {
               <div className="comment-top">
                 <span className="cid">ID: loyalty-652-2022</span>
                 <span>|</span>
-                <span className="cdate">{new Date().toISOString().split('T')[0]}</span>
+                <span className="cdate">
+                  {new Date().toISOString().split("T")[0]}
+                </span>
               </div>
               <span>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -160,7 +159,9 @@ export const MemoList = () => {
               <div className="comment-top">
                 <span className="cid">ID: loyalty-652-2022</span>
                 <span>|</span>
-                <span className="cdate">{new Date().toISOString().split('T')[0]}</span>
+                <span className="cdate">
+                  {new Date().toISOString().split("T")[0]}
+                </span>
               </div>
               <span>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -174,7 +175,9 @@ export const MemoList = () => {
               <div className="comment-top">
                 <span className="cid">ID: loyalty-652-2022</span>
                 <span>|</span>
-                <span className="cdate">{new Date().toISOString().split('T')[0]}</span>
+                <span className="cdate">
+                  {new Date().toISOString().split("T")[0]}
+                </span>
               </div>
               <span>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -188,7 +191,9 @@ export const MemoList = () => {
               <div className="comment-top">
                 <span className="cid">ID: loyalty-652-2022</span>
                 <span>|</span>
-                <span className="cdate">{new Date().toISOString().split('T')[0]}</span>
+                <span className="cdate">
+                  {new Date().toISOString().split("T")[0]}
+                </span>
               </div>
               <span>{content}</span>
               <p>FROM: HR</p>
