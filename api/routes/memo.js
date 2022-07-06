@@ -6,7 +6,7 @@ const {
   verifyTokenAuthorization,
 } = require("./verifytoken");
 
-
+//create memo
 router.post("/memos", async (req, res) => {
 const newMemo = new Memo(req.body)
   try {
@@ -18,7 +18,8 @@ const newMemo = new Memo(req.body)
 })
 
 //update memo
-router.put("/memo/:id", verifyTokenAuthorization, async (req, res) => {
+verifyTokenAuthorization
+router.put("/update/:id", async (req, res) => {
   try {
     const updatedMemo = await Memo.findByIdAndUpdate(
       req.params.id,
@@ -35,8 +36,9 @@ router.put("/memo/:id", verifyTokenAuthorization, async (req, res) => {
 
 //get all memo
 router.get("/",  async (req, res) => {
+  const query = req.query.new
   try {
-    const memos = await Memo.find();
+    const memos = query ? await Memo.find().sort({_id: -1}).limite(20) : await Memo.find();
     res.status(200).json(memos);
   } catch (err) {
     res.status(500).json(err)

@@ -1,31 +1,44 @@
 import Box from "@mui/material/Box";
-import {  useState } from "react";
+import { useState } from "react";
 import "./memolist.css";
 import { style } from "./boxstyle";
 import Typography from "@mui/material/Typography";
-//import ReactHtmlParser from "react-html-parser";
-import { jsPDF } from "jspdf";
+import ReactHtmlParser from "react-html-parser";
+// import { Document, Page } from "react-pdf";
 import { AddOutlined } from "@material-ui/icons";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 export const MemoList = () => {
-  // const [memo, setMemo] = useState("");
   const [open, setOpen] = useState(false);
-  const [txt, setText] = useState("");
-  const [content, setContent] = useState("");
-  
-  const location = useLocation()
-  const productId = location.pathname.split("/")[2]
- console.log(productId) 
-  const download = () => {
-    const doc = new jsPDF("portrait", "px", "a4", "false");
-    doc.text(60, 60, "hello");
-    doc.addPage();
-    doc.save("a4.pdf");
-  };
-  const handleSend = () => {
-    setContent(txt);
+  const [comments, setText] = useState("");
+  // const [numPages, setNumPages] = useState(null);
+  // const [pageNumber, setPageNumber] = useState(1);
+
+  // const onDocumentLoadSuccess = ({ numPages }) => setNumPages(numPages);
+
+  const location = useLocation();
+  const memoId = location.pathname.split("/")[2].toString();
+
+  //fetch memo from redux
+  const memos = useSelector((state) =>
+    state.memo.Memo.find((item) => item.id === memoId)
+  );
+  console.log(memos.comment);
+  const download = () => {};
+  const handleSend = async () => {
+    try {
+      const res = await axios.put(
+        `http://localhost:4000/api/memo/update/${memos._id}`,
+        { comment: { message: comments, by: "Amoateng De-Graft" } }
+      );
+      console.log(res.data);
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
     setText("");
+    setOpen(false);
   };
   const handleComment = () => {
     setOpen(true);
@@ -39,7 +52,7 @@ export const MemoList = () => {
           name=""
           cols="30"
           rows="10"
-          value={txt}
+          value={comments}
           placeholder="comment here...."
           onChange={(e) => setText(e.target.value)}
         ></textarea>
@@ -60,7 +73,7 @@ export const MemoList = () => {
                     alignItems: "center",
                   }}
                 >
-                  <div> MEMO (ID: loyalty-652-2022)</div>
+                  <div className="memoID">MEMO ( ID:{memos.id} )</div>
                   <div
                     style={{
                       fontSize: "10px",
@@ -68,66 +81,88 @@ export const MemoList = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    APPROVED
+                    status: APPROVED
                   </div>
                 </div>
               </Typography>
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 <div className="header">
-                  <p>TO : EXECUTIVE DIRECTOR</p>
-                  <p>FROM : HEAD OF IT DEPARTMENT</p>
-                  <p className="date">
-                    DATE : {new Date().toISOString().split("T")[0]}
+                  <p>
+                    <span>TO</span> : {memos.to}
                   </p>
-                  <p style={{ marginTop: "10px"}} className="pg">
+                  <p>
+                    <span>FROM</span> : {memos.from}
+                  </p>
+                  <p className="date">
+                    <span>DATE</span> : {memos.date.split("T")[0] || "no date"}
+                  </p>
+                  <p style={{ marginTop: "10px" }} className="pg">
                     {" "}
                     SUBJECT :{" "}
-                    <span style={{fontSize:'13px'}}>
-                      REQUEST FOR PAYMENT OF MAINTENANCE FEE TO GEOLET CONSULT
+                    <span style={{ fontSize: "13px" }}>
+                      {memos.subject || "No Subject"}
                     </span>
                   </p>
                 </div>
               </Typography>
               <Typography className="content">
                 <div className="content-details">
-                  {/* content */}
-                  <div>
-                    {/* {" "}
-                  {ReactHtmlParser(
-                    "Hello there how are you doing today and beyond Hello there how are you doing today and beyond Hello there how are you doing today and beyond Hello there how are you doing today and beyond"
-                  )} */}
-                    <p>
-                      Hello there how are you doing today and beyond Hello there
-                      how are you doing today and beyond Hello there how are you
-                      doing today and beyond Hello there how are you doing today
-                      and beyond.
-                    </p>
+                  <div className="cp-text">
+                    <p>{ReactHtmlParser(memos.content)}</p>
                   </div>
-
-                  {/* end of content */}
                   <div
                     className="content-attachement"
-                    style={{ fontSize: "12px" }}
+                    style={{ fontSize: "12px", marginBottom: "10px" }}
                   >
                     {" "}
                     Files:
+                    {memos.files &&
+                      memos.files.map((file, i) => (
+                        <div key={i}>
+                          <input
+                            type="text"
+                            contentEditable={false}
+                            defaultValue={file}
+                            style={{ margin: "5px" }}
+                          />
+                          <button>View</button>
+                        </div>
+                      ))}
                   </div>
                 </div>
                 <div
                   className="sign"
                   style={{ display: "flex", flexDirection: "column" }}
                 >
-                  <span style={{ fontSize: "12px" }}>Thank You</span>
-                  <span style={{ fontSize: "12px" }}> Signature:</span>
-                  <p style={{ fontSize: "12px" }}>( DANIEL K. NAGAI )</p>
+                  <span>
+                    <img
+                      src={memos.signature}
+                      alt="signature"
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </span>
+                  <p style={{ fontSize: "12px", marginBottom: "10px" }}>
+                    ( DANIEL K. NAGAI )
+                  </p>
                 </div>
               </Typography>
               <button className="download-btn" onClick={download}>
                 Download PDF
               </button>
             </Box>
+            {/* <Document file={memos} onLoadSuccess={onDocumentLoadSuccess}>
+              <Page pageNumber={pageNumber} />
+              <p>
+                Page {pageNumber} of {numPages}
+              </p>
+            </Document> */}
           </div>
           {/* comments */}
+
           <div className="comments">
             <span
               style={{ borderBottom: "2px solid purple", color: "GrayText" }}
@@ -139,65 +174,19 @@ export const MemoList = () => {
                 <AddOutlined style={{ fontSize: "20px" }} />
               </div>
             </div>
-            <div className="comment-details">
-              <div className="comment-top">
-                <span className="cid">ID: loyalty-652-2022</span>
-                <span>|</span>
-                <span className="cdate">
-                  {new Date().toISOString().split("T")[0]}
-                </span>
+            {memos.comment.map((memo) => (
+              <div className="comment-details">
+                <div className="comment-top">
+                  <span className="cid">ID:{memos.id}</span>
+                  <span>|</span>
+                  <span className="cdate">
+                  {memos.date.split("T")[0] || "no date"}
+                  </span>
+                </div>
+                <span>{memo.message}</span>
+                <p>FROM: {memo.by}</p>
               </div>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Praesentium aspernatur nulla officia debitis possimus incidunt
-                totam corporis enim aperiam excepturi? Ex eligendi accusantium
-                dolorem est temporibus porro ut alias tenetur?
-              </span>
-              <p>FROM: EXECUTIVE DIRECTOR</p>
-            </div>
-            <div className="comment-details">
-              <div className="comment-top">
-                <span className="cid">ID: loyalty-652-2022</span>
-                <span>|</span>
-                <span className="cdate">
-                  {new Date().toISOString().split("T")[0]}
-                </span>
-              </div>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Praesentium aspernatur nulla officia debitis possimus incidunt
-                totam corporis enim aperiam excepturi? Ex eligendi accusantium
-                dolorem est temporibus porro ut alias tenetur?
-              </span>
-              <p>FROM: HEAD OF IT</p>
-            </div>
-            <div className="comment-details">
-              <div className="comment-top">
-                <span className="cid">ID: loyalty-652-2022</span>
-                <span>|</span>
-                <span className="cdate">
-                  {new Date().toISOString().split("T")[0]}
-                </span>
-              </div>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Praesentium aspernatur nulla officia debitis possimus incidunt
-                totam corporis enim aperiam excepturi? Ex eligendi accusantium
-                dolorem est temporibus porro ut alias tenetur?
-              </span>
-              <p>FROM: CFO</p>
-            </div>
-            <div className="comment-details">
-              <div className="comment-top">
-                <span className="cid">ID: loyalty-652-2022</span>
-                <span>|</span>
-                <span className="cdate">
-                  {new Date().toISOString().split("T")[0]}
-                </span>
-              </div>
-              <span>{content}</span>
-              <p>FROM: HR</p>
-            </div>
+            ))}
           </div>
         </div>
       </div>

@@ -1,13 +1,15 @@
 import React from "react";
 import "./sidebar.css";
 import { Link } from "react-router-dom";
-import {
-  Create,
-  ExitToApp,
-  Home,
-  Settings,
-} from "@material-ui/icons";
+import { Create, ExitToApp, Home, Settings } from "@material-ui/icons";
+
 export const Sidebar = () => {
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("userDetails");
+  };
+ 
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
@@ -53,7 +55,9 @@ export const Sidebar = () => {
             </li>
             <li className="sidebarItems">
               <ExitToApp className="sidebarIcon" />
-              <span className="menu-item">LOGOUT</span>
+              <span className="menu-item" onClick={handleLogout}>
+                LOGOUT
+              </span>
             </li>
           </ul>
         </div>

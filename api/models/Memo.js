@@ -1,27 +1,28 @@
 const mongoose = require("mongoose");
 
-const memoSchema = mongoose.Schema(
+const memoSchema = new mongoose.Schema(
   {
     id: { type: String, require: true },
     to: { type: String, require: true },
     through: { type: String },
     from: { type: String, require: true },
-    date: { type: Date, require: true },  
-    copy: { type: String},
+    date: { type: Date, require: true },
+    copy: { type: String },
     files: { type: Array },
     signature: { type: String, require: true },
     content: { type: String, require: true },
-    comment: [{
-      memoId:{
-        type: String
+    subject: { type: String, require: true },
+    comment: [
+      {
+        message: {
+          type: String,
+        },
+        by: {
+          type: String,
+        },
       },
-      message:{
-        type:String
-      },
-      by:{
-         type:String
-      }
-    }, {timeStamps:true}],
+      { timeStamps: true },
+    ],
     name: { type: String },
   },
   { timeStamps: true }

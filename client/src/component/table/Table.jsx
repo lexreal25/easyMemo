@@ -1,28 +1,32 @@
+import "./table.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
-import "./table.css";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import axios from "axios";
+import { getMemoSuccess } from "../../redux/memoRedux";
 
 export const Table = () => {
   const [memo, setMemo] = useState("");
   // const [list, setList] = useState([]);
-  //fetch memo from database
+  const dispatch = useDispatch();
+
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/api/memo/");
+        setMemo(res.data);
+        dispatch(getMemoSuccess(res.data));
+        console.log(res.data);
+      } catch (error) {}
+    };
     fetchData();
-    // setList(memo)
-  }, []);
+  }, [dispatch]);
+
   //delete memo
   // const handleDelete = (id) => {
   //   setList(list.filter(item => item.id !== id))
   // }
-  const fetchData = async () => {
-    try {
-      const res = await axios.get("http://localhost:4000/api/memo/");
-      setMemo(res.data);
-      console.log(res.data);
-    } catch (error) {}
-  };
   const columns = [
     { field: "id", headerName: "ID", width: 150 },
     { field: "date", headerName: "Date", width: 100, type: "date" },

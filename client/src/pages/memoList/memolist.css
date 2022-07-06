@@ -16,7 +16,13 @@
 .memo-details {
   flex: 2;
 }
-
+.header >p > span {
+  font-weight: bold;
+}
+.memoID{
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 13px;
+}
 @page {
   size: A4;
   margin: 0;
@@ -88,48 +94,47 @@
   cursor: pointer;
   font-family: "Times New Roman", Times, serif;
 }
-.modal-content{
+.modal-content {
   width: 300px;
   height: 200px;
 }
-.cTxt{
+.cTxt {
   display: flex;
   flex-direction: column;
   z-index: 2;
   position: fixed;
   top: 12%;
   left: 70%;
-  width:300px;
-  height: 300px; 
+  width: 300px;
+  height: 300px;
   transition: 5s ease-in;
-  
 }
-.cTxt>textarea{
+.cTxt > textarea {
   padding: 10px;
   border: none;
   border-radius: 5px;
   font-size: 16px;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
   cursor: pointer;
   font-style: italic;
 }
-.cT{
+.cT {
   display: none;
 }
-.cTxt>textarea:focus{
+.cTxt > textarea:focus {
   outline: none;
 }
-.btn>button{
+.btn > button {
   padding: 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
-.btn>button:first-child{
+.btn > button:first-child {
   background-color: green;
   color: white;
 }
-.btn>button:last-child{
+.btn > button:last-child {
   background-color: red;
   margin-left: 2px;
   color: white;

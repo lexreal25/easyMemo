@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const memoSlice = createSlice({
   name: "memo",
   initialState: {
-    currentMemo: null,
+    Memo: null,
     isFetching: false,
     error: false,
     success: false,
@@ -15,7 +15,7 @@ const memoSlice = createSlice({
     getMemoSuccess: (state, action) => {
       state.isFetching = false;
       state.error = false;
-      state.currentMemo = action.payload;
+      state.Memo = action.payload;
     },
     getMemoFailure: (state) => {
       state.isFetching = false;

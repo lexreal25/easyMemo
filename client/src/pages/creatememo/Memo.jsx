@@ -9,10 +9,11 @@ import ReactHtmlParser from "react-html-parser";
 import { style } from "./boxstyle";
 import { users } from "./userData";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Publish } from "@material-ui/icons";
 
 export const Memo = () => {
   const [signature, setSignature] = useState("");
-  const [preview, setPreview] = useState("");
   const [id, setId] = useState("");
   const [open, setOpen] = useState(false);
   const [to, setTo] = useState("");
@@ -22,13 +23,12 @@ export const Memo = () => {
   const [copy, setCopy] = useState("");
   const [content, setContent] = useState("");
   const [date, setDate] = useState("");
-  const [files, setFile] = useState("");
-  //  const [info, setInfo] = useState("")
-console.log(files)
+  const [files, setFile] = useState([]);
+  const [uploadedfile, setUploadedFile] = useState("");
+  const navigation = useNavigate();
   useEffect(() => {
     genId();
   }, []);
-
   //generate unique id for each memo
   const genId = async () => {
     const val = Math.floor(1000 + Math.random() * 900);
@@ -41,28 +41,31 @@ console.log(files)
     const sign = new FormData();
     sign.append("file", signature);
     sign.append("upload_preset", "upload");
-    //attached documents
     try {
-      const list = await Promise.all(
-       Object.values(files).map(async (file) => {
-          const doc = new FormData();
-          doc.append("file", file);
-          doc.append("upload_preset", "upload");
-          const uploadedRes = await axios.post(
-            "https://api.cloudinary.com/v1_1/lexreal1/image/upload",
-            doc,
-            {reportProgress:true}
-          );
-          const {url} = uploadedRes.data
-          return url;
-        })
-      );
       const res = await axios.post(
         "https://api.cloudinary.com/v1_1/lexreal1/image/upload",
-        sign
-      );
+        sign,
+        { reportProgress: true }
+        );
       const { url } = res.data;
-      console.log(res.data);
+      console.log(res.data)
+      //documents
+      if (files) {
+        await Promise.all(
+          Object.values(files).map(async (file) => {
+            const doc = new FormData();
+            doc.append("file", file);
+            doc.append("upload_preset", "upload");
+            const filesUpload = await axios.post(
+              "https://api.cloudinary.com/v1_1/lexreal1/image/upload",
+              doc,
+              { reportProgress: true }
+            );
+            let { url } = filesUpload.data;
+            setUploadedFile(url)
+          })
+        );
+      }
       const newMemo = {
         id,
         content,
@@ -72,7 +75,7 @@ console.log(files)
         subject,
         copy,
         signature: url,
-        files:list
+        files: uploadedfile
       };
       await axios.post("http://localhost:4000/api/memo/memos", newMemo);
     } catch (err) {
@@ -81,6 +84,7 @@ console.log(files)
     setTimeout(() => {
       clear();
       genId();
+      navigation("/");
     }, 3000);
   };
   const clear = () => {
@@ -97,7 +101,6 @@ console.log(files)
       setCopy("")
     );
   };
-
   const handleOpen = (e) => {
     e.preventDefault();
     setOpen(true);
@@ -109,15 +112,6 @@ console.log(files)
     setContent(data);
   };
 
-
-  const handleSignature = (e) => {
-    const selectedFile = e.target.files[0];
-    setSignature(selectedFile);
-    const filePreview = URL.createObjectURL(selectedFile);
-    setPreview(filePreview);
-    console.log(filePreview);
-  };
-
   return (
     <div className="memo">
       <Modal
@@ -127,19 +121,21 @@ console.log(files)
         aria-describedby="modal-modal-description"
       >
         {/* content display */}
-        <Box className="box-main" sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            MEMO (ID:{id})
-          </Typography>
+        <Box className="box-main" overflow="scroll" sx={style}>
+          <p> MEMO (ID:{id})</p>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <div className="header">
               <p>TO : {to}</p>
               <p>FROM : {from}</p>
-              <p>THROUGH : {through}</p>
+              <p style={{ textTransform: "uppercase" }}>THROUGH : {through}</p>
+              <p>
+                Cc : <span style={{ textTransform: "uppercase" }}>{copy}</span>{" "}
+              </p>
               <p className="date">DATE : {date}</p>
               <p style={{ marginTop: "10px" }} className="pg">
                 {" "}
-                SUBJECT : <span>{subject} </span>
+                SUBJECT :{" "}
+                <span style={{ textTransform: "uppercase" }}>{subject}</span>
               </p>
             </div>
           </Typography>
@@ -158,13 +154,12 @@ console.log(files)
               className="sign"
               style={{ display: "flex", flexDirection: "column" }}
             >
-              <p>Thank You</p>
               <span style={{ display: "flex", flexDirection: "column" }}>
                 {" "}
                 signature:
                 {signature && (
                   <img
-                    src={preview}
+                    src={URL.createObjectURL(signature)}
                     alt="signature"
                     style={{
                       width: "50px",
@@ -263,22 +258,25 @@ console.log(files)
           </div>
           {/* attach file */}
           <div className="memo-div-file" style={{ margin: "20px 0" }}>
-            <label style={{ fontSize: "12px", fontFamily: "inherit" }}>
-              Attach File(s):
+            <label htmlFor="file">
+            <Publish />
             </label>
             <input
               type="file"
+              id="file"
               name="documents"
               size={25600}
               multiple
               accept=".png .jpeg .pdf"
-              className="memo-input file"
+              // className="memo-input file"
+              style={{display:'none'}}
               onChange={(e) => setFile(e.target.files)}
             />
+            <button>UPLOAD DOCS</button>
           </div>
           <div className="memo-div">
             <label style={{ fontSize: "12px", fontFamily: "inherit" }}>
-              Attach signature
+             <Publish />
             </label>
             <input
               type="file"
@@ -286,7 +284,7 @@ console.log(files)
               size={1024}
               className="memo-input"
               // value={signature}
-              onChange={handleSignature}
+              onChange={(e) => setSignature(e.target.files[0])}
             />
           </div>
           <div className="memo-text-area">
@@ -294,6 +292,11 @@ console.log(files)
             <CKEditor
               editor={ClassicEditor}
               data={content}
+              config={
+                {
+                  ckfinder:{}
+                }
+              }
               onChange={handleChange}
             />
           </div>

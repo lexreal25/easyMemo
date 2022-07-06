@@ -7,9 +7,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Settings } from "./pages/settings/Settings";
 import { MemoList } from "./pages/memoList/MemoList";
 import { Login } from "./pages/login/Login";
+import { useEffect } from "react";
 
 function App() {
-  const user = true;
+  // const user = () => localStorage.getItem("userDetails");
+  // useEffect(() => {
+  //   user();
+  // }, []);
+  const user = false
   return (
     <Router>
       {/* <Login /> */}
@@ -27,7 +32,9 @@ function App() {
             </Routes>
           </div>
         </>
-      ) : <Login />}
+      ) : (
+        <Login />
+      )}
     </Router>
   );
 }

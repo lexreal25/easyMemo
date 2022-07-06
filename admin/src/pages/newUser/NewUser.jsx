@@ -1,6 +1,11 @@
 import { useState } from "react";
 import "./newuser.css";
+import axios from "axios"
+import { dispatch } from "react-redux"
+
+
 export const NewUser = () => {
+
   const [state, setState] = useState({
     id: "",
     name: "",
@@ -9,11 +14,20 @@ export const NewUser = () => {
     signature: "",
     active: "",
   });
-
+//  const dispatch = useDispatch();
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
-
+ const handleSubmit =async (e) => {
+  e.preventDefault();
+  console.log({name:state.name})
+  try {
+    const res = await axios.post(`${process.env.BASE_URL}/register`,...state)
+    console.log(res.data)
+  } catch (error) {
+    
+  }
+ }
   return (
     <div className="newUser">
       <h1 className="newUserTitle">New User</h1>
@@ -51,6 +65,7 @@ export const NewUser = () => {
             type="password"
             name="password"
             placeholder="enter password"
+            autoComplete="true"
             onChange={handleChange}
           />
         </div>
@@ -64,13 +79,14 @@ export const NewUser = () => {
             name="active"
             id="active"
             className="newUserSelect"
+            autoComplete="true"
             onChange={handleChange}
           >
             <option value="yes">Yes</option>
             <option value="no">No</option>
           </select>
         </div>
-        <button className="newUserBtn" type="submit">Create</button>
+        <button className="newUserBtn" onClick={handleSubmit}>Create</button>
       </form>
     </div>
   );
