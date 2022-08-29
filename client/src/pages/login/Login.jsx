@@ -1,8 +1,10 @@
 // import axios from "axios";
+import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../redux/apiCall";
+// import { login } from "../../redux/apiCall";
+import { loginStart, loginSuccess } from "../../redux/userRedux";
 import "./login.css";
 export const Login = () => {
   const [id, setId] = useState("");
@@ -15,8 +17,17 @@ export const Login = () => {
     e.preventDefault();
     if (password !== "" || id !== "") {
       try {
-        login(dispatch, { id, password });
-        navigate("/memo")
+        dispatch(loginStart())
+        const res= await axios.post('http://localhost:4000/api/auth/login',{
+          id, password
+        })
+        dispatch(loginSuccess(res.data))
+        const accessToken = JSON.stringify(res.data.accessToken)
+        const token = localStorage.setItem('token', accessToken)
+        if(token){
+          localStorage.getItem("token")
+          navigate("/", {replace: true})
+        }
       } catch (error) {
         console.log(error);
       }

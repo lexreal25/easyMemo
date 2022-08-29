@@ -1,7 +1,7 @@
 import "./settings.css";
 import avatar from "../../assets/avatar.png";
 import { BorderColor, PermIdentity } from "@material-ui/icons";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 export const Settings = () => {
   return (
     <div className="settings">

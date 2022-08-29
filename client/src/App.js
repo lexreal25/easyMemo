@@ -10,11 +10,11 @@ import { Login } from "./pages/login/Login";
 import { useEffect } from "react";
 
 function App() {
-  // const user = () => localStorage.getItem("userDetails");
-  // useEffect(() => {
-  //   user();
-  // }, []);
-  const user = false
+  const user = () => localStorage.getItem("userDetails");
+  useEffect(() => {
+    user();
+  }, []);
+  // const user = true
   return (
     <Router>
       {/* <Login /> */}

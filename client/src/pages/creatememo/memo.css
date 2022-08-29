@@ -7,7 +7,7 @@
   -webkit-box-shadow: 2px 4px 5px 0px rgba(230, 214, 214, 0.75);
   -moz-box-shadow: 2px 4px 5px 0px rgba(230, 214, 214, 0.75);
 }
-.memo-container{
+.memo-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -89,7 +89,7 @@
   font-family: "Times New Roman", Times, serif;
   line-height: 10px;
 }
-.pg span{
+.pg span {
   font-size: 12px;
   border-bottom: 0.5px solid #000;
   text-transform: uppercase;
@@ -100,8 +100,8 @@
 /* .content{
   padding: 2px;
 } */
-.content p{
-  font-family: 'Times New Roman', Times, serif;
+.content p {
+  font-family: "Times New Roman", Times, serif;
   font-size: 15px;
 }
 .txt {
@@ -109,4 +109,8 @@
   border: none;
   box-sizing: border-box;
   border-bottom: 1px solid gray;
+}
+.btn_upload {
+  margin-left: 10px;
+  height: 30px;
 }

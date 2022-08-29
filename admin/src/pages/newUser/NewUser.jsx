@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./newuser.css";
 import axios from "axios"
-import { dispatch } from "react-redux"
+// import { dispatch } from "react-redux"
 
 
 export const NewUser = () => {

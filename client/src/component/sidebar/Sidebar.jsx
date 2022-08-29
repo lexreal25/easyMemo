@@ -1,15 +1,24 @@
-import React from "react";
+// import {useHistory} from "react";
 import "./sidebar.css";
 import { Link } from "react-router-dom";
-import { Create, ExitToApp, Home, Settings } from "@material-ui/icons";
+import {
+  Create,
+  ExitToApp,
+  Home,
+  Settings,
+  SendOutlined,
+  MailOutlined,
+  RateReviewOutlined,
+} from "@material-ui/icons";
 
 export const Sidebar = () => {
-
+  // const history = useHistory();
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.removeItem("userDetails");
+    // history.push("/login");
   };
- 
+
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
@@ -48,11 +57,30 @@ export const Sidebar = () => {
               </Link>
             </li>
             <li className="sidebarItems">
+              <Link to="/" className="links">
+                <SendOutlined className="sidebarIcon" />
+                <span className="menu-item">SENT MEMOS</span>
+              </Link>
+            </li>
+            <li className="sidebarItems">
+              <Link to="/" className="links">
+                <MailOutlined className="sidebarIcon" />
+                <span className="menu-item">RECEIVED MEMOS</span>
+              </Link>
+            </li>
+            <li className="sidebarItems">
+              <Link to="/" className="links">
+                <RateReviewOutlined className="sidebarIcon" />
+                <span className="menu-item">MEMOS TO REVIEW</span>
+              </Link>
+            </li>
+            <li className="sidebarItems">
               <Link to="/edit/:userId" className="links">
                 <Settings className="sidebarIcon" />
                 <span className="menu-item">Settings</span>
               </Link>
             </li>
+
             <li className="sidebarItems">
               <ExitToApp className="sidebarIcon" />
               <span className="menu-item" onClick={handleLogout}>

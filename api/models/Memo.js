@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const memoSchema = new mongoose.Schema(
   {
-    id: { type: String, require: true },
+    id: { type: String, require: true,unique: true },
     to: { type: String, require: true },
     through: { type: String },
     from: { type: String, require: true },
@@ -12,18 +12,6 @@ const memoSchema = new mongoose.Schema(
     signature: { type: String, require: true },
     content: { type: String, require: true },
     subject: { type: String, require: true },
-    comment: [
-      {
-        message: {
-          type: String,
-        },
-        by: {
-          type: String,
-        },
-      },
-      { timeStamps: true },
-    ],
-    name: { type: String },
   },
   { timeStamps: true }
 );

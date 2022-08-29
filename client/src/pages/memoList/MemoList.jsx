@@ -1,50 +1,128 @@
-import Box from "@mui/material/Box";
 import { useState } from "react";
 import "./memolist.css";
 import { style } from "./boxstyle";
 import Typography from "@mui/material/Typography";
 import ReactHtmlParser from "react-html-parser";
-// import { Document, Page } from "react-pdf";
 import { AddOutlined } from "@material-ui/icons";
 import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import { saveAs } from "file-saver";
+import { getComments } from "../../redux/apiCall";
+import { useEffect } from "react";
 
+const senders = [
+  {
+    id: 1,
+    name: "ED",
+  },
+  {
+    id: 2,
+    name: "MD",
+  },
+  {
+    id: 3,
+    name: "CFO",
+  },
+  {
+    id: 4,
+    name: "HR",
+  },
+  {
+    id: 5,
+    name: "HEAD OF IT",
+  },
+  {
+    id: 6,
+    name: "CORPORATE AFFAIRS",
+  },
+  {
+    id: 7,
+    name: "MARKETING",
+  },
+];
 export const MemoList = () => {
   const [open, setOpen] = useState(false);
   const [comments, setText] = useState("");
-  // const [numPages, setNumPages] = useState(null);
-  // const [pageNumber, setPageNumber] = useState(1);
-
-  // const onDocumentLoadSuccess = ({ numPages }) => setNumPages(numPages);
-
+  const [options, setOptions] = useState("");
+  const [data, setData] = useState({
+    id: 1,
+    to: "IT MANAGER",
+    through: "cfo",
+    from: "MD",
+    date: "22-10-2022",
+    copy: "",
+    files: "",
+    signature: "signed",
+    content: "Hello",
+    subject: "Request for payment",
+  });
   const location = useLocation();
-  const memoId = location.pathname.split("/")[2].toString();
+  const dispatch = useDispatch();
 
+  const memoId = location.pathname.split("/")[2].toString();
+  // const user = useSelector((state) => state.user.currentUser.name);
   //fetch memo from redux
   const memos = useSelector((state) =>
     state.memo.Memo.find((item) => item.id === memoId)
   );
-  console.log(memos.comment);
-  const download = () => {};
-  const handleSend = async () => {
-    try {
-      const res = await axios.put(
-        `http://localhost:4000/api/memo/update/${memos._id}`,
-        { comment: { message: comments, by: "Amoateng De-Graft" } }
-      );
-      console.log(res.data);
-    } catch (error) {
-      console.log(error.response.data.message);
-    }
-    setText("");
-    setOpen(false);
+  const userComment = useSelector((state) => state.comment.comments);
+
+  useEffect(() => {
+    const creatpdf = async () =>
+      await axios
+        .post(`${process.env.REACT_APP_BASE_URL}/pdf/createpdf`, memos)
+        .then((res) => {
+          console.log(res.data);
+        });
+    creatpdf();
+  }, [memos]);
+
+  const download = async () => {
+    await axios
+      .get(`${process.env.REACT_APP_BASE_URL}/pdf/fetchpdf`, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+        saveAs(pdfBlob, "memo.pdf");
+      })
+      .then((err) => {
+        console.log(err);
+      });
   };
-  const handleComment = () => {
+
+  const handleSend = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${process.env.REACT_APP_BASE_URL}/comment/`, {
+        receiver: options,
+        memoId,
+        comment: { message: comments, from: "jell" },
+      });
+      setTimeout(() => {
+        setOpen(false);
+        getComments(dispatch);
+      }, 1500);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  //open comment modal
+  const handleComment = (e) => {
+    e.preventDefault();
     setOpen(true);
   };
-  const handleClose = () => setOpen(false);
-
+  const handleClose = (e) => {
+    e.preventDefault();
+    setOpen(false);
+  };
+  //select option
+  const handleSelect = (e) => {
+    e.preventDefault();
+    setOptions(e.target.value);
+  };
   return (
     <div className="memolist">
       <div className={open ? "cTxt" : "cT"}>
@@ -56,15 +134,34 @@ export const MemoList = () => {
           placeholder="comment here...."
           onChange={(e) => setText(e.target.value)}
         ></textarea>
-        <div className="btn">
-          <button onClick={handleSend}>Send</button>
-          <button onClick={handleClose}>X</button>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div
+            className="send_to"
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <h6>SEND TO :</h6>
+            <select
+              className="select-opt"
+              value={options}
+              onChange={handleSelect}
+            >
+              {senders.map((sender) => (
+                <option key={sender.id} value={sender.name}>
+                  {sender.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="btn">
+            <button onClick={handleSend}>Send</button>
+            <button onClick={handleClose}>X</button>
+          </div>
         </div>
       </div>
       <div className="memolist-container">
         <div className="memo-page">
           <div className="memo-details">
-            <Box sx={style}>
+            <div sx={style} className="content">
               <Typography variant="h6" component="h6">
                 <div
                   style={{
@@ -73,12 +170,12 @@ export const MemoList = () => {
                     alignItems: "center",
                   }}
                 >
-                  <div className="memoID">MEMO ( ID:{memos.id} )</div>
+                  <p className="memoID">MEMO ID:({memos.id})</p>
                   <div
                     style={{
-                      fontSize: "10px",
+                      fontSize: "12px",
                       color: "green",
-                      fontWeight: "bold",
+                      fontFamily: "'Ibarra Real Nova', serif",
                     }}
                   >
                     status: APPROVED
@@ -94,40 +191,38 @@ export const MemoList = () => {
                     <span>FROM</span> : {memos.from}
                   </p>
                   <p className="date">
-                    <span>DATE</span> : {memos.date.split("T")[0] || "no date"}
+                    <span>DATE</span> : {memos.date.split("T")[0] || "no date"}{" "}
+                    {memos.createdAt}
                   </p>
-                  <p style={{ marginTop: "10px" }} className="pg">
-                    {" "}
-                    SUBJECT :{" "}
-                    <span style={{ fontSize: "13px" }}>
-                      {memos.subject || "No Subject"}
-                    </span>
+                  <p className="pg">
+                    SUBJECT : <span>{memos.subject || "No Subject"}</span>
                   </p>
                 </div>
               </Typography>
               <Typography className="content">
                 <div className="content-details">
                   <div className="cp-text">
-                    <p>{ReactHtmlParser(memos.content)}</p>
+                    {ReactHtmlParser(`<p className="cp">${memos.content}</p>`)}
                   </div>
                   <div
                     className="content-attachement"
                     style={{ fontSize: "12px", marginBottom: "10px" }}
                   >
                     {" "}
-                    Files:
-                    {memos.files &&
-                      memos.files.map((file, i) => (
-                        <div key={i}>
-                          <input
-                            type="text"
-                            contentEditable={false}
-                            defaultValue={file}
-                            style={{ margin: "5px" }}
-                          />
-                          <button>View</button>
-                        </div>
-                      ))}
+                    Attachments:
+                    {memos.files !== []
+                      ? memos.files.map((file, i) => (
+                          <div key={i} style={{ marginTop: "4px" }}>
+                            name of doc{" "}
+                            <button
+                              className="doc_atc"
+                              onClick={() => window.open(file)}
+                            >
+                              View Document
+                            </button>
+                          </div>
+                        ))
+                      : "No files attached"}
                   </div>
                 </div>
                 <div
@@ -153,16 +248,9 @@ export const MemoList = () => {
               <button className="download-btn" onClick={download}>
                 Download PDF
               </button>
-            </Box>
-            {/* <Document file={memos} onLoadSuccess={onDocumentLoadSuccess}>
-              <Page pageNumber={pageNumber} />
-              <p>
-                Page {pageNumber} of {numPages}
-              </p>
-            </Document> */}
+            </div>
           </div>
           {/* comments */}
-
           <div className="comments">
             <span
               style={{ borderBottom: "2px solid purple", color: "GrayText" }}
@@ -174,19 +262,27 @@ export const MemoList = () => {
                 <AddOutlined style={{ fontSize: "20px" }} />
               </div>
             </div>
-            {memos.comment.map((memo) => (
-              <div className="comment-details">
-                <div className="comment-top">
-                  <span className="cid">ID:{memos.id}</span>
-                  <span>|</span>
-                  <span className="cdate">
-                  {memos.date.split("T")[0] || "no date"}
-                  </span>
-                </div>
-                <span>{memo.message}</span>
-                <p>FROM: {memo.by}</p>
-              </div>
-            ))}
+            {userComment.map(
+              (comment, index) =>
+                comment.memoId === memoId && (
+                  <div className="comment-details" key={index}>
+                    <div className="comment-top">
+                      <span className="cdate">
+                        Date: {comment.createdAt.split("T")[0] || "no date"}
+                      </span>
+                      <span>|</span>
+                      <span className="cid">
+                        Time: {comment.createdAt.split("T")[1].split(".")[0]}
+                      </span>
+                    </div>
+                    <span style={{ color: "#BD910E" }}>
+                      @{comment.receiver}
+                    </span>
+                    <span>{comment.comment.message}</span>
+                    <p>FROM: {comment.comment.from}</p>
+                  </div>
+                )
+            )}
           </div>
         </div>
       </div>

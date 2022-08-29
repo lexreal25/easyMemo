@@ -2,7 +2,6 @@
   flex: 4;
   position: relative;
 }
-
 .memo-page {
   display: flex;
   position: relative;
@@ -13,30 +12,25 @@
   border-radius: 5px;
   background-color: rgba(240, 233, 233, 0.75);
 }
+/* #A52294,#BD910E */
 .memo-details {
   flex: 2;
+  border-radius: 5px;
+  background: linear-gradient(whitesmoke, rgba(141, 137, 137, 0.75));
+  box-shadow: 2px 3px 15px 0px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 2px 3px 15px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 2px 3px 15px 0px rgba(0, 0, 0, 0.75);
+  padding: 15px;
 }
-.header >p > span {
-  font-weight: bold;
+.header > p > span {
+  font-family: "Ibarra Real Nova", serif;
 }
-.memoID{
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 13px;
+.memoID {
+  font-family: "Ibarra Real Nova", serif;
+  color: #A52294;
 }
-@page {
-  size: A4;
-  margin: 0;
-}
-@media print {
-  .memo-page {
-    margin: 0;
-    border: initial;
-    width: initial;
-    min-height: initial;
-    box-shadow: initial;
-    background: initial;
-    page-break-after: always;
-  }
+.cp {
+  font-family: "Ibarra Real Nova", serif;
 }
 .comments {
   flex: 1;
@@ -92,7 +86,7 @@
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  font-family: "Times New Roman", Times, serif;
+  font-family: "Ibarra Real Nova", serif;
 }
 .modal-content {
   width: 300px;
@@ -124,6 +118,9 @@
 .cTxt > textarea:focus {
   outline: none;
 }
+.btn {
+  margin-left: 5px;
+}
 .btn > button {
   padding: 10px;
   border: none;
@@ -138,4 +135,18 @@
   background-color: red;
   margin-left: 2px;
   color: white;
+}
+.send-to > h6{
+  font-family: 'Times New Roman', Times, serif;
+}
+.select-opt {
+  width: 100px;
+  height: 30px;
+  margin-left: 5px;
+  margin-top: 10px;
+  border-radius: 3px;
+  outline: none;
+}
+.doc_atc{
+  cursor:pointer
 }

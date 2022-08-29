@@ -1,21 +1,21 @@
 import "./table.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { getMemoSuccess } from "../../redux/memoRedux";
 
 export const Table = () => {
-  const [memo, setMemo] = useState("");
-  // const [list, setList] = useState([]);
   const dispatch = useDispatch();
+
+  // const userid = useSelector((state) => state.user.currentUser.name);
+  const memos = useSelector((state) =>state.memo.Memo) //.find((memo) => memo.to === userid
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/api/memo/");
-        setMemo(res.data);
+        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/memo/`);
         dispatch(getMemoSuccess(res.data));
         console.log(res.data);
       } catch (error) {}
@@ -31,14 +31,16 @@ export const Table = () => {
     { field: "id", headerName: "ID", width: 150 },
     { field: "date", headerName: "Date", width: 100, type: "date" },
     { field: "to", headerName: "Sent By", width: 200, type: "text" },
-    { field: "from", headerName: "Set To", width: 200, type: "text" },
+    { field: "from", headerName: "Sent To", width: 200, type: "text" },
+    // { field: "reviewed", headerName: "Set To", width: 200, type: "text" },
     {
       field: "subject",
       headerName: "Subject",
       sortable: false,
       width: 150,
     },
-    { field: "status", headerName: "Status", width: 90 },
+    { field: "status", headerName: "Status", width: 80 },
+    // { field: "review", headerName: "Reviewed", width: 90 },
     {
       field: "action",
       headerName: "Action",
@@ -62,7 +64,7 @@ export const Table = () => {
     <div style={{ height: "100%", width: "100%" }}>
       <DataGrid
         sx={{
-          boxShadow: 2,
+          boxShadow: 1,
           border: 1,
           fontSize: 12,
           fontStyle: "normal",
@@ -71,7 +73,7 @@ export const Table = () => {
             color: "primary.main",
           },
         }}
-        rows={memo}
+        rows={memos}
         columns={columns}
         pageSize={20}
         rowsPerPageOptions={[10]}
