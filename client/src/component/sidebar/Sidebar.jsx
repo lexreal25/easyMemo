@@ -1,6 +1,5 @@
-// import {useHistory} from "react";
 import "./sidebar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Create,
   ExitToApp,
@@ -10,17 +9,36 @@ import {
   MailOutlined,
   RateReviewOutlined,
 } from "@material-ui/icons";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Sidebar = () => {
-  // const history = useHistory();
+  const navigate = useNavigate();
+
   const handleLogout = (e) => {
     e.preventDefault();
-    localStorage.removeItem("userDetails");
-    // history.push("/login");
+    localStorage.clear();
+    notify("Logout successful");
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
   };
+
+  const notify = (message) => toast.success(message);
 
   return (
     <div className="sidebar">
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="sidebarWrapper">
         <div className="sidebarMenu">
           <div
@@ -57,7 +75,7 @@ export const Sidebar = () => {
               </Link>
             </li>
             <li className="sidebarItems">
-              <Link to="/" className="links">
+              <Link to="/sent" className="links">
                 <SendOutlined className="sidebarIcon" />
                 <span className="menu-item">SENT MEMOS</span>
               </Link>

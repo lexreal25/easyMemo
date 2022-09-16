@@ -1,9 +1,10 @@
 .back {
-      height: 100vh;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: rgb(223, 215, 215);
+  transition: 0.10s ease-in;
 }
 .login {
   /* width: 100vw; */
@@ -15,9 +16,9 @@
   justify-content: center;
   border-radius: 10px;
   background: linear-gradient(white, orange);
-  box-shadow: 2px 4px 5px 0px rgba(230,214,214,0.75);
-  -webkit-box-shadow: 2px 4px 5px 0px rgba(230,214,214,0.75);
-  -moz-box-shadow: 2px 4px 5px 0px rgba(230,214,214,0.75);
+  box-shadow: 2px 4px 5px 0px rgba(230, 214, 214, 0.75);
+  -webkit-box-shadow: 2px 4px 5px 0px rgba(230, 214, 214, 0.75);
+  -moz-box-shadow: 2px 4px 5px 0px rgba(230, 214, 214, 0.75);
 }
 .login > p {
   color: purple;

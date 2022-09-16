@@ -13,8 +13,7 @@ const memoSlice = createSlice({
       state.isFetching = true;
     },
     getMemoSuccess: (state, action) => {
-      state.isFetching = false;
-      state.error = false;
+      state.success = true
       state.Memo = action.payload;
     },
     getMemoFailure: (state) => {

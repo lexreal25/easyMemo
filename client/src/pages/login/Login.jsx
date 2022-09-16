@@ -1,40 +1,56 @@
-// import axios from "axios";
+import { useEffect } from "react";
+import "./login.css";
 import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// import { login } from "../../redux/apiCall";
 import { loginStart, loginSuccess } from "../../redux/userRedux";
-import "./login.css";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+//error handling
+const notify = (message) => toast.error(message);
+const success = (message) => toast.success(message);
+
 export const Login = () => {
-  const [id, setId] = useState("");
+  const [fname, setId] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit =async (e) => {
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== "" || id !== "") {
+    if (password !== "" || fname !== "") {
       try {
-        dispatch(loginStart())
-        const res= await axios.post('http://localhost:4000/api/auth/login',{
-          id, password
-        })
-        dispatch(loginSuccess(res.data))
-        const accessToken = JSON.stringify(res.data.accessToken)
-        const token = localStorage.setItem('token', accessToken)
-        if(token){
-          localStorage.getItem("token")
-          navigate("/", {replace: true})
+        dispatch(loginStart());
+        const res = await axios.post("http://localhost:4000/api/auth/login", {
+          fname,
+          password,
+        });
+        dispatch(loginSuccess(res.data));
+        const accessToken = await JSON.stringify(res.data.accessToken);
+        localStorage.setItem("token", accessToken);
+        if (accessToken) {
+          success("Login successful redirecting to homepage");
+          setTimeout(() => {
+            navigate("/", { replace: true });
+          },2000);
         }
       } catch (error) {
-        console.log(error);
+        notify(error.response.data);
       }
-      setId("")
+      setId("");
       setPassword("");
     } else {
-      console.log("login details incorrect");
+      notify("login details incorrect");
     }
   };
   return (
@@ -43,9 +59,9 @@ export const Login = () => {
         <p>easyMemo</p>
         <input
           type="text"
-          placeholder="Enter your id"
+          placeholder="Enter your firstname"
           autoComplete="true"
-          value={id}
+          value={fname}
           onChange={(e) => setId(e.target.value)}
         />
         <input
@@ -59,6 +75,17 @@ export const Login = () => {
           LOGIN
         </button>
       </form>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

@@ -1,40 +1,45 @@
 import "./App.css";
-import { Sidebar } from "./component/sidebar/Sidebar";
+// import { Sidebar } from "./component/sidebar/Sidebar";
 import { Topbar } from "./component/topbar/Topbar";
 import { Home } from "./pages/home/Home";
 import { Memo } from "./pages/creatememo/Memo";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { Settings } from "./pages/settings/Settings";
 import { MemoList } from "./pages/memoList/MemoList";
 import { Login } from "./pages/login/Login";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Sent } from "./pages/sentmemos/SentMemos";
 
 function App() {
-  const user = () => localStorage.getItem("userDetails");
+  const [currentUser, setCurrentUser] = useState();
+
   useEffect(() => {
-    user();
+    const user = localStorage.getItem("user");
+    setCurrentUser(user?.currentUser);
   }, []);
-  // const user = true
+
+  if (currentUser === null) {
+    return <Navigate to="/login" />;
+  }
+
   return (
     <Router>
-      {/* <Login /> */}
-      {user ? (
-        <>
-          {" "}
-          <Topbar />
-          <div className="container">
-            <Sidebar />
-            <Routes>
-              <Route exact path="/" element={<Home />} />
-              <Route path="/memo" element={<Memo />} />
-              <Route path="/edit/:userId" element={<Settings />} />
-              <Route path="/memo/:memoId" element={<MemoList />} />
-            </Routes>
-          </div>
-        </>
-      ) : (
-        <Login />
-      )}
+      <Topbar />
+      <Routes>
+        <Route path="/">
+          <Route index element={<Home />} />
+          <Route path="memo" element={<Memo />} />
+          <Route path="edit/:userId" element={<Settings />} />
+          <Route path="memo/:memoId" element={<MemoList />} />
+          <Route path="login" element={<Login />} />
+          <Route path="sent" element={<Sent />} />
+        </Route>
+      </Routes>
     </Router>
   );
 }
