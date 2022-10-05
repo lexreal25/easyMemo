@@ -1,52 +1,51 @@
 import { useState } from "react";
 import "./newuser.css";
-import axios from "axios"
+import axios from "axios";
 // import { dispatch } from "react-redux"
 
-
 export const NewUser = () => {
-
   const [state, setState] = useState({
     id: "",
-    name: "",
+    fname: "",
+    lname: "",
     role: "",
     password: "",
-    signature: "",
-    active: "",
   });
-//  const dispatch = useDispatch();
+  //  const dispatch = useDispatch();
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
- const handleSubmit =async (e) => {
-  e.preventDefault();
-  console.log({name:state.name})
-  try {
-    const res = await axios.post(`${process.env.BASE_URL}/register`,...state)
-    console.log(res.data)
-  } catch (error) {
-    
-  }
- }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/auth/register`,
+        state
+      );
+      console.log(res.data);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
   return (
     <div className="newUser">
       <h1 className="newUserTitle">New User</h1>
       <form className="newUserForm">
         <div className="newUserItem">
-          <label>ID</label>
+          <label>First Name</label>
           <input
             type="text"
-            name="id"
-            placeholder="user id "
+            name="fname"
+            placeholder="Enter first name "
             onChange={handleChange}
           />
         </div>
         <div className="newUserItem">
-          <label>Name</label>
+          <label>Last Name</label>
           <input
             type="text"
-            name="name"
-            placeholder="De-Graft Amoateng"
+            name="lname"
+            placeholder="Last name"
             onChange={handleChange}
           />
         </div>
@@ -70,23 +69,28 @@ export const NewUser = () => {
           />
         </div>
         <div className="newUserItem">
-          <label>Signature</label>
-          <input type="file" name="signature" onChange={handleChange} />
-        </div>
-        <div className="newUserItem">
-          <label>Active</label>
+          <label>Role ID</label>
           <select
-            name="active"
-            id="active"
+            name="id"
+            id="id"
             className="newUserSelect"
             autoComplete="true"
             onChange={handleChange}
           >
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
+            <option value="defalt">Select</option>
+            <option value="ed">ED</option>
+            <option value="md">MD</option>
+            <option value="it">IT</option>
+            <option value="au">AU</option>
+            <option value="cfo">CFO</option>
+            <option value="hr">HR</option>
+            <option value="hsm">HSM</option>
+            <option value="hbd">HBD</option>
           </select>
         </div>
-        <button className="newUserBtn" onClick={handleSubmit}>Create</button>
+        <button className="newUserBtn" onClick={handleSubmit}>
+          Create
+        </button>
       </form>
     </div>
   );

@@ -62,7 +62,7 @@ export const Sidebar = () => {
               <Link to="/" className="links">
                 <Home style={{ fontSize: "12px" }} />
                 <span style={{ fontSize: "12px", marginLeft: "5px" }}>
-                  ALL MEMO
+                  RECEIVED MEMOS
                 </span>
               </Link>
             </li>
@@ -81,13 +81,13 @@ export const Sidebar = () => {
               </Link>
             </li>
             <li className="sidebarItems">
-              <Link to="/" className="links">
+              <Link to="/copied" className="links">
                 <MailOutlined className="sidebarIcon" />
-                <span className="menu-item">RECEIVED MEMOS</span>
+                <span className="menu-item">COPIED MEMOS</span>
               </Link>
             </li>
             <li className="sidebarItems">
-              <Link to="/" className="links">
+              <Link to="/review" className="links">
                 <RateReviewOutlined className="sidebarIcon" />
                 <span className="menu-item">MEMOS TO REVIEW</span>
               </Link>

@@ -1,7 +1,6 @@
-import { NotificationsNone, Settings } from "@material-ui/icons";
+import { NotificationsNone } from "@material-ui/icons";
 import React from "react";
 import "./topbar.css";
-// import { Link } from "react-router-dom";
 
 export const Topbar = () => {
   return (
@@ -18,11 +17,6 @@ export const Topbar = () => {
             <NotificationsNone />
             <span className="topIconBag">2</span>
           </div>
-          {/* <div className="topbarIconContainer">
-            <Link to={"/edit/:userId"}>
-              <Settings  />
-            </Link>
-          </div> */}
         </div>
       </div>
     </div>

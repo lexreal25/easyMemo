@@ -4,6 +4,7 @@ const memoSlice = createSlice({
   name: "memo",
   initialState: {
     Memo: null,
+    // receivedmemos:null,
     isFetching: false,
     error: false,
     success: false,
@@ -16,6 +17,9 @@ const memoSlice = createSlice({
       state.success = true
       state.Memo = action.payload;
     },
+    // receivedMemo: (state, action) => {
+    //   state.receivedmemos = action.payload
+    // },
     getMemoFailure: (state) => {
       state.isFetching = false;
       state.error = true;

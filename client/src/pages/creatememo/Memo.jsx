@@ -13,13 +13,17 @@ import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../../component/sidebar/Sidebar";
 import "../../App.css";
 import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const notify = (message) => toast.error(message);
+const success = (message) => toast.success(message);
 
 export const Memo = () => {
   const [signature, setSignature] = useState("");
   const [id, setId] = useState("");
   const [open, setOpen] = useState(false);
   const [to, setTo] = useState("");
-  const [from, setFrom] = useState("");
   const [subject, setSubject] = useState("");
   const [through, setThrough] = useState("");
   const [copy, setCopy] = useState("");
@@ -28,23 +32,27 @@ export const Memo = () => {
   const [files, setFile] = useState([]);
   const [uploadedfile, setUploadedFile] = useState("");
   const [uploadsig, setUploadSig] = useState("");
-  const [filename, setFileName] = useState("");
+  const [setFileName] = useState("");
 
   const navigate = useNavigate();
-  const username = useSelector((state) =>state.user.currentUser?.name)
-
+  const { fname, lname, role } = useSelector(
+    (state) => state.user?.currentUser
+  );
+  let name = fname + " " + lname;
   useEffect(() => {
-    if(localStorage.getItem("token") === null){
-      navigate("/login")
+    if (localStorage.getItem("user") === null) {
+      navigate("/login");
     }
     genId();
   }, [navigate]);
+
   //generate unique id for each memo
   const genId = async () => {
     const date = new Date();
     const val = Math.floor(1000 + Math.random() * 900);
     setId("loyalty-" + val.toString() + "-" + date.getFullYear());
   };
+
   //upload attachement
   const uploadDoc = async (e) => {
     e.preventDefault();
@@ -63,53 +71,74 @@ export const Memo = () => {
             let { url, original_filename } = uploadedFiles.data;
             setUploadedFile(url);
             setFileName(original_filename);
+            success("upload successful");
           })
         );
       }
+      return notify("Select file(s) to upload");
     } catch (error) {
-      console.log(error.message);
+      notify(error.response.data.error.message);
     }
   };
   //attach signature
   const uploadSignature = async (e) => {
     e.preventDefault();
-    const sig = new FormData();
-    sig.append("file", signature);
-    sig.append("upload_preset", "upload");
-    try {
-      const res = await axios.post(`${process.env.REACT_APP_CLOUDINARY}`, sig, {
-        reportProgress: true,
-      });
-      const { url } = res.data;
-      setUploadSig(url);
-    } catch (error) {
-      alert(error.response.data.error.message);
+    if (signature === "") notify("Please upload your signature");
+    else {
+      success("Uploading signature");
+      const sig = new FormData();
+      sig.append("file", signature);
+      sig.append("upload_preset", "upload");
+      try {
+        const res = await axios.post(
+          `${process.env.REACT_APP_CLOUDINARY}`,
+          sig,
+          {
+            reportProgress: true,
+          }
+        );
+        const { url } = res.data;
+        success("upload successful");
+        setUploadSig(url);
+      } catch (error) {
+        notify(error.response.data.error.message);
+      }
     }
   };
   //submit data
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const newMemo = {
-        id,
-        content,
-        to,
-        from,
-        date,
-        subject,
-        copy,
-        signature: uploadsig,
-        files: uploadedfile,
-      };
-      await axios.post(`${process.env.REACT_APP_BASE_URL}/memo/memos`, newMemo);
-    } catch (err) {
-      console.log(err);
+    if (content === "") {
+      notify("provide all fields");
+    } else {
+      success("Sending memo");
+      try {
+        const newMemo = {
+          id,
+          content,
+          to,
+          from: role,
+          date,
+          subject,
+          copy,
+          sender: name,
+          signature: uploadsig,
+          files: uploadedfile,
+        };
+        await axios.post(
+          `${process.env.REACT_APP_BASE_URI}/memo/memos`,
+          newMemo
+        );
+        success("Memo sent successfully");
+      } catch (err) {
+        notify(err.message);
+      }
+      setTimeout(() => {
+        clear();
+        genId();
+        navigate("/");
+      }, 3000);
     }
-    setTimeout(() => {
-      clear();
-      genId();
-      navigate("/");
-    }, 3000);
   };
   const clear = () => {
     return (
@@ -117,7 +146,6 @@ export const Memo = () => {
       setThrough(""),
       setDate(""),
       setFile(""),
-      setFrom(""),
       setId(""),
       setSignature(""),
       setSubject(""),
@@ -138,6 +166,17 @@ export const Memo = () => {
 
   return (
     <div className="container">
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Sidebar />
       <div className="memo">
         <Modal
@@ -152,7 +191,7 @@ export const Memo = () => {
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               <div className="header">
                 <p>TO : {to}</p>
-                <p>FROM : {from}</p>
+                <p>FROM : {role}</p>
                 <p style={{ textTransform: "uppercase" }}>
                   THROUGH : {through}
                 </p>
@@ -192,7 +231,7 @@ export const Memo = () => {
                     />
                   )}
                 </span>
-                <p style={{ fontSize: "12px" }}>( {username} )</p>
+                <p style={{ fontSize: "12px" }}>( {fname + " " + lname} )</p>
               </div>
             </Typography>
           </Box>
@@ -244,18 +283,12 @@ export const Memo = () => {
             </div>
             <div className="memo-div">
               <label>From:</label>
-              <select
-                className="to-selector"
-                onChange={(e) => setFrom(e.target.value)}
-                value={from}
-                name="from"
-              >
-                {users.map((user) => (
-                  <option key={user.id} value={user.name}>
-                    {user.name}
-                  </option>
-                ))}
-              </select>
+              <input
+                type="text"
+                className="memo-input"
+                defaultValue={role}
+                readOnly
+              />
             </div>
             <div className="memo-div">
               <label>Date:</label>

@@ -13,14 +13,21 @@ import { getComments } from "../../redux/apiCall";
 import { useEffect } from "react";
 import { Sidebar } from "../../component/sidebar/Sidebar";
 import "../../App.css";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const notify = (message) => toast.error(message);
+// const success = (message) => toast.success(message);
+
 const senders = [
   {
     id: 1,
-    name: "ED",
+    name: "EXECUTIVE DIRECTOR",
   },
   {
     id: 2,
-    name: "MD",
+    name: "MANAGING DIRECTOR",
   },
   {
     id: 3,
@@ -28,7 +35,7 @@ const senders = [
   },
   {
     id: 4,
-    name: "HR",
+    name: "HR MANAGER",
   },
   {
     id: 5,
@@ -50,13 +57,14 @@ export const MemoList = () => {
 
   const location = useLocation();
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const memoId = location.pathname.split("/")[2].toString();
-  const user = useSelector((state) => state.user.currentUser.name);
+  const { fname, lname } = useSelector((state) => state.user.currentUser);
+  const sender = fname + " " + lname;
   
   useEffect(() => {
-    if(localStorage.getItem("token") === null){
-      navigate("/login")
+    if (localStorage.getItem("user") === null) {
+      navigate("/login");
     }
   }, [navigate]);
   //fetch memo from redux
@@ -64,11 +72,10 @@ export const MemoList = () => {
     state.memo.Memo.find((item) => item.id === memoId)
   );
   const userComment = useSelector((state) => state.comment.comments);
-
   useEffect(() => {
     const creatpdf = async () =>
       await axios
-        .post(`${process.env.REACT_APP_BASE_URL}/pdf/createpdf`, memos)
+        .post(`${process.env.REACT_APP_BASE_URI}/pdf/createpdf`, memos)
         .then((res) => {
           console.log(res.data);
         });
@@ -78,7 +85,7 @@ export const MemoList = () => {
   //download memo
   const download = async () => {
     await axios
-      .get(`${process.env.REACT_APP_BASE_URL}/pdf/fetchpdf`, {
+      .get(`${process.env.REACT_APP_BASE_URI}/pdf/fetchpdf`, {
         responseType: "blob",
       })
       .then((res) => {
@@ -86,6 +93,7 @@ export const MemoList = () => {
         saveAs(pdfBlob, "memo.pdf");
       })
       .then((err) => {
+        notify(err.message);
         console.log(err);
       });
   };
@@ -93,10 +101,10 @@ export const MemoList = () => {
   const handleSend = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${process.env.REACT_APP_BASE_URL}/comment/`, {
+      await axios.post(`${process.env.REACT_APP_BASE_URI}/comment/`, {
         receiver: options,
         memoId,
-        comment: { message: comments, from: user },
+        comment: { message: comments, from: sender },
       });
       setOpen(false);
       setText("");
@@ -105,7 +113,7 @@ export const MemoList = () => {
         getComments(dispatch);
       }, 1500);
     } catch (error) {
-      console.log(error.message);
+      notify(error.message);
     }
   };
 
@@ -125,6 +133,17 @@ export const MemoList = () => {
   };
   return (
     <div className="container">
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Sidebar />
       <div className="memolist">
         <div className={open ? "cTxt" : "cT"}>
@@ -180,7 +199,7 @@ export const MemoList = () => {
                         fontFamily: "'Ibarra Real Nova', serif",
                       }}
                     >
-                      status: APPROVED
+                      status: {memos.status}
                     </div>
                   </div>
                 </Typography>
@@ -208,27 +227,28 @@ export const MemoList = () => {
                         `<p className="cp">${memos.content}</p>`
                       )}
                     </div>
-                    <div
-                      className="content-attachement"
-                      style={{ fontSize: "12px", marginBottom: "10px" }}
-                    >
-                      {" "}
-                      Attachments:
-                      {memos.files !== []
-                        ? memos.files.map((file, i) => (
-                            <div key={i} style={{ marginTop: "4px" }}>
-                              name of doc{" "}
-                              <button
-                                className="doc_atc"
-                                onClick={() => window.open(file)}
-                              >
-                                View Document
-                              </button>
-                            </div>
-                          ))
-                        : "No files attached"}
-                    </div>
+                    {memos.files[0] !== '' && (
+                      <div
+                        className="content-attachement"
+                        style={{ fontSize: "12px", marginBottom: "10px" }}
+                      >
+                        {" "}
+                        Attachments:
+                        {memos.files?.map((file, i) => (
+                          <div key={i} style={{ marginTop: "4px" }}>
+                            name of doc{" "}
+                            <button
+                              className="doc_atc"
+                              onClick={() => window.open(file)}
+                            >
+                              View Document
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
+
                   <div
                     className="sign"
                     style={{ display: "flex", flexDirection: "column" }}
@@ -245,7 +265,7 @@ export const MemoList = () => {
                       />
                     </span>
                     <p style={{ fontSize: "12px", marginBottom: "10px" }}>
-                      ( DANIEL K. NAGAI )
+                      ( {memos.sender} )
                     </p>
                   </div>
                 </Typography>

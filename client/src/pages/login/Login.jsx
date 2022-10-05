@@ -21,20 +21,23 @@ export const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("user")) {
       navigate("/");
     }
   }, [navigate]);
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== "" || fname !== "") {
       try {
         dispatch(loginStart());
-        const res = await axios.post("http://localhost:4000/api/auth/login", {
-          fname,
-          password,
-        });
+        const res = await axios.post(
+          `${process.env.REACT_APP_BASE_URI}/auth/login`,
+          {
+            fname,
+            password,
+          }
+        );
         dispatch(loginSuccess(res.data));
         const accessToken = await JSON.stringify(res.data.accessToken);
         localStorage.setItem("token", accessToken);
@@ -42,7 +45,7 @@ export const Login = () => {
           success("Login successful redirecting to homepage");
           setTimeout(() => {
             navigate("/", { replace: true });
-          },2000);
+          }, 2000);
         }
       } catch (error) {
         notify(error.response.data);
@@ -59,6 +62,7 @@ export const Login = () => {
         <p>easyMemo</p>
         <input
           type="text"
+          style={{ textTransform: "uppercase" }}
           placeholder="Enter your firstname"
           autoComplete="true"
           value={fname}

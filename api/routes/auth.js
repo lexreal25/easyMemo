@@ -5,13 +5,17 @@ const jwt = require("jsonwebtoken");
 
 //create user
 router.post("/register", async (req, res) => {
+  const { id, fname, lname, role } = req.body;
   const newUser = new User({
-    ...req.body,
+    id,
+    fname,
+    lname,
+    role,
     password: CryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC),
   });
   try {
     //check if user exist
-    if (req.body.id !== (await User.findOne({ id: req.body.id }))) {
+    if (req.body.id !== (await User.findOne({ id:id }))) {
       const savedUser = await newUser.save();
       res.status(200).json(savedUser);
     } else {
@@ -24,9 +28,10 @@ router.post("/register", async (req, res) => {
 
 //login
 router.post("/login", async (req, res) => {
+  const { fname } = req.body;
   try {
-    const user = await User.findOne({ id: req.body.id });
-    !user && res.status(401).json("Incorrect ID");
+    const user = await User.findOne({ fname: fname });
+    !user && res.status(401).json("Incorrect username");
     const hashedPassword = CryptoJS.AES.decrypt(
       user.password,
       process.env.PASS_SEC

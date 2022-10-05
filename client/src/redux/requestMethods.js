@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = `${process.env.REACT_APP_BASE_URL}/memo/`;
+const BASE_URL = `${process.env.REACT_APP_BASE_URI}/memo/`;
 export const publicRequest = axios.create({
   baseUrl: BASE_URL,
 });

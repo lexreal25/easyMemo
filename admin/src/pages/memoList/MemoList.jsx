@@ -85,26 +85,7 @@ export const MemoList = () => {
                       doing today and beyond Hello there how are you doing today
                       and beyond.
                     </p>
-                    <p>
-                      Hello there how are you doing today and beyond Hello there
-                      how are you doing today and beyond Hello there how are you
-                      doing today and beyond Hello there how are you doing today
-                      and beyond.
-                    </p>
-                    <p>
-                      Hello there how are you doing today and beyond Hello there
-                      how are you doing today and beyond Hello there how are you
-                      doing today and beyond Hello there how are you doing today
-                      and beyond. Hello there how are you doing today and beyond
-                      Hello there
-                    </p>
-                    <p>
-                      Hello there how are you doing today and beyond Hello there
-                      how are you doing today and beyond Hello there how are you
-                      doing today and beyond Hello there how are you doing today
-                      and beyond. Hello there how are you doing today and beyond
-                      Hello there
-                    </p>
+                   
                   </div>
 
                   {/* end of content */}

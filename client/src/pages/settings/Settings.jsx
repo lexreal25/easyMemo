@@ -5,22 +5,20 @@ import { Sidebar } from "../../component/sidebar/Sidebar";
 import { useSelector } from "react-redux";
 import "../../App.css";
 
-
 export const Settings = () => {
   const { name, role, id } = useSelector((state) => state.user.currentUser);
 
   const handleUpdate = async (e) => {
-    e.preventDefault()
-    try{
-      
-    }catch{}
-  }
+    e.preventDefault();
+    try {
+    } catch {}
+  };
   return (
     <div className="container">
       <Sidebar />
       <div className="settings">
         <div className="userSettingContainer">
-          <h1 className="userTitle">Edit User</h1>
+          <h1 className="userTitle">Account Details</h1>
         </div>
         <div className="userContainer">
           <div className="userShow">
@@ -85,7 +83,12 @@ export const Settings = () => {
                     placeholder="User Id"
                   />
                 </div>
-                <button className="userUpdateBtn" onclick={() => handleUpdate()}>Update</button>
+                <button
+                  className="userUpdateBtn"
+                  onclick={() => handleUpdate()}
+                >
+                  Update
+                </button>
               </div>
             </form>
           </div>

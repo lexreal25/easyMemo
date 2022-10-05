@@ -1,0 +1,7 @@
+.pending {
+  flex: 4;
+  padding: 5px;
+  background-color: white;
+  margin: 10px;
+  transition: 0.1s ease-in;
+}

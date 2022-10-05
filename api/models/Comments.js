@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 const commentSchema = new mongoose.Schema(
   {
-    receiver: { type: String }, //RECEIVERS NAME
+    receiver: { type: String, required:true }, //RECEIVERS NAME
     memoId: { type: String, require: true},
     comment: {
-      message: { type: String },
-      from: { type: String }, // SENDERS NAME
+      message: { type: String, required:true },
+      from: { type: String, required:true }, // SENDERS NAME
     }
   },
   { timestamps: true }

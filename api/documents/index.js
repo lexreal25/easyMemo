@@ -8,6 +8,7 @@ module.exports = ({
   files,
   signature,
   content,
+  sender,
   subject,
 }) => {
   return `
@@ -57,6 +58,7 @@ module.exports = ({
             .subject{
                   text-decoration: underline;
                   font-weight: bold;
+                  text-transform: upperCase;
             }
             .docs{
                   display:flex;
@@ -96,6 +98,7 @@ module.exports = ({
       </style>
 </head>
 <body>
+
       <div class="memo-page">
             <div class="memo-details">
                   <div class="content">
@@ -105,25 +108,27 @@ module.exports = ({
                   <div class="header">
                         <p class="head">TO: EXECUTIVE DIRECTOR</p>
                         <p class="head">FROM:${from}</p>
-                        <p class="head">Cc: ${copy}</p>
-                        <p class="head">DATE:${date}</p>
+                        <p class="head">Cc: ${copy || "Not specified"}</p>
+                        <p class="head">DATE: ${date.split("T")[0]}</p>
                         <p class="head subject">SUBJECT: ${subject}</p>
                   </div>
                   <div class="body">
-                        <p class="message">I kindly request the payment of GHS 5000 to Geolet Consult. Invoice attached.</p>
-                        <span>Attached Documents:</span>
-                        <div class="docs">
-                        <p>{document name}</p>
-                        <p>{document name}</p>
+                        <p class="message">${content}</p>
+                        <span>Attached Documents:</span>                    
+                        <div class="docs" id="doc">       
+                            <p id='docs'></p>
+                            
                         </div>
+                       
                   </div>
                   <div class="salutation">
                         <img src=${signature} alt="signature" width="50" height="50" />
-                        <p>(Daniel K Nagai)</p>
+                        <p>(${sender})</p>
                   </div>
             </div>
       </div>
+     
 </body>
 </html>
-`
+`;
 };

@@ -14,13 +14,16 @@ import { MemoList } from "./pages/memoList/MemoList";
 import { Login } from "./pages/login/Login";
 import { useEffect, useState } from "react";
 import { Sent } from "./pages/sentmemos/SentMemos";
+import { Review } from "./pages/memostoreview/MemosToReview";
+import { Received } from "./pages/receivedmemos/ReceivedMemos";
+import { CopiedMemos } from "./pages/copiedmemo/Copied";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState("");
 
   useEffect(() => {
     const user = localStorage.getItem("user");
-    setCurrentUser(user?.currentUser);
+    setCurrentUser(user?.currentUser.accessToken);
   }, []);
 
   if (currentUser === null) {
@@ -38,6 +41,9 @@ function App() {
           <Route path="memo/:memoId" element={<MemoList />} />
           <Route path="login" element={<Login />} />
           <Route path="sent" element={<Sent />} />
+          <Route path="review" element={<Review />} />
+          <Route path="copied" element={<CopiedMemos />} />
+          <Route path="received" element={<Received />} />
         </Route>
       </Routes>
     </Router>

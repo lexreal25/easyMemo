@@ -8,7 +8,7 @@ router.post("/", async (req, res, next) => {
     const comment = await newComment.save();
     res.status(200).json(comment);
   } catch (error) {
-    res.status(401).json(err);
+    res.status(401).json("Please add empty fields");
   }
 });
 

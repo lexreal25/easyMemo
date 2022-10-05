@@ -14,8 +14,8 @@ const persistConfig = {
 };
 const rootReducer = combineReducers({
   user:userReducer,
-  memo:memoReducer,
-  comment:commentReducer
+  // memo:memoReducer,
+  // comment:commentReducer
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

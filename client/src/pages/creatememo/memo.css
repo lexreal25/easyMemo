@@ -44,7 +44,9 @@
   height: 30px;
   font-family: "Times New Roman", Times, serif;
 }
-.to-selector:focus {
+.to-selector,
+.prev,
+.send:focus {
   outline: none;
 }
 .to-selector option {
@@ -68,11 +70,9 @@
   outline: none;
   cursor: pointer;
   font-family: "Times New Roman", Times, serif;
+  cursor: pointer;
 }
-.prev,
-.send:focus {
-  outline: none;
-}
+
 .send {
   margin-left: 10px;
 }

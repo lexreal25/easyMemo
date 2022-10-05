@@ -2,26 +2,26 @@ import { useEffect } from "react";
 import { Sidebar } from "../../component/sidebar/Sidebar";
 import { Table } from "../../component/table/Table";
 import { useNavigate } from "react-router-dom";
-import "./sentmemos.css";
+import "./received.css";
 import "../../App.css";
 import { useSelector } from "react-redux";
 
-export const Sent = () => {
+export const Received = () => {
   const navigate = useNavigate();
-  const userkey = localStorage.getItem("userkey");
-
-  const filteredMemos = useSelector((state) =>
-    state.memo.Memo?.filter(
-      (memo) => memo.from.replace(/ +/g, "").toLowerCase() === userkey
-    )
-  );
-
   useEffect(() => {
     if (localStorage.getItem("user") === null) {
       navigate("/login");
     }
   }, [navigate]);
 
+  const userkey = localStorage.getItem("userkey");
+
+  const filteredMemos = useSelector((state) =>
+    state.memo.Memo?.filter(
+      (memo) => 
+        memo.copy.replace(/ +/g, "").toLowerCase()  === userkey
+    )
+  );
   return (
     <div className="container">
       <Sidebar />

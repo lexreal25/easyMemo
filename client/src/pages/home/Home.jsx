@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 export const Home = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    if (localStorage.getItem("token") === null) {
+    if (localStorage.getItem("user") === null) {
       navigate("/login");
     }
   }, [navigate]);
@@ -22,16 +22,23 @@ export const Home = () => {
     state.user.currentUser?.role.replace(/ +/g, "").toLowerCase()
   );
 
+  localStorage.setItem("userkey", userid);
+
   const filteredMemos = useSelector((state) =>
     state.memo.Memo?.filter(
-      (memo) => memo.to.replace(/ +/g, "").toLowerCase() === userid
+      (memo) =>
+        memo.to.replace(/ +/g, "").toLowerCase() === userid
     )
   );
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/memo/`);
+        const res = await axios.get(`${process.env.REACT_APP_BASE_URI}/memo/`,{
+          headers:{
+            token:"Bearer "+JSON.parse(localStorage.getItem('token')),
+          }
+        });
         dispatch(getMemoSuccess(res.data));
       } catch (error) {
         console.log(error);
@@ -44,7 +51,7 @@ export const Home = () => {
     const fetchComment = async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/comment/`
+          `${process.env.REACT_APP_BASE_URI}/comment/`
         );
         dispatch(allComments(res.data));
       } catch (error) {

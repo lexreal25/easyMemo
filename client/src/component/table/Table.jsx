@@ -2,13 +2,12 @@ import "./table.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 
-export const Table = ({info}) => {
-
+export const Table = ({ info }) => {
   const columns = [
     { field: "id", headerName: "ID", width: 150 },
     { field: "date", headerName: "Date", width: 100, type: "date" },
-    { field: "to", headerName: "Sent By", width: 200, type: "text" },
-    { field: "from", headerName: "Sent To", width: 200, type: "text" },
+    { field: "to", headerName: "Sent To", width: 200, type: "text" },
+    { field: "from", headerName: "Sent By", width: 200, type: "text" },
     {
       field: "subject",
       headerName: "Subject",
@@ -39,6 +38,7 @@ export const Table = ({info}) => {
           boxShadow: 1,
           border: 1,
           fontSize: 12,
+          fontFamily:'sans-serif',
           fontStyle: "normal",
           borderColor: "primary.light",
           "& .MuiDataGrid-cell:hover": {
