@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 export const Home = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    if (localStorage.getItem("user") === null) {
+    if (localStorage.getItem("token") === null) {
       navigate("/login");
     }
   }, [navigate]);
@@ -40,9 +40,7 @@ export const Home = () => {
           }
         });
         dispatch(getMemoSuccess(res.data));
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error){}
     };
     fetchData();
   }, [dispatch]);
@@ -51,12 +49,14 @@ export const Home = () => {
     const fetchComment = async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_BASE_URI}/comment/`
+          `${process.env.REACT_APP_BASE_URI}/comment/`,{
+            headers:{
+              token: "Bearer "+JSON.parse(localStorage.getItem('token'))
+            }
+          }
         );
         dispatch(allComments(res.data));
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     fetchComment();
   }, [dispatch]);

@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useEffect, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic/build/ckeditor";
 import ReactHtmlParser from "react-html-parser";
 import { style } from "./boxstyle";
 import { users } from "./userData";
@@ -15,6 +15,7 @@ import "../../App.css";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 
 const notify = (message) => toast.error(message);
 const success = (message) => toast.success(message);
@@ -40,7 +41,7 @@ export const Memo = () => {
   );
   let name = fname + " " + lname;
   useEffect(() => {
-    if (localStorage.getItem("user") === null) {
+    if (localStorage.getItem("token") === null) {
       navigate("/login");
     }
     genId();
@@ -120,6 +121,7 @@ export const Memo = () => {
           from: role,
           date,
           subject,
+          through,
           copy,
           sender: name,
           signature: uploadsig,
@@ -129,6 +131,7 @@ export const Memo = () => {
           `${process.env.REACT_APP_BASE_URI}/memo/memos`,
           newMemo
         );
+        console.log(newMemo)
         success("Memo sent successfully");
       } catch (err) {
         notify(err.message);
@@ -153,16 +156,22 @@ export const Memo = () => {
       setCopy("")
     );
   };
+  const handleChange = (e, editor) => {
+    const data = editor.getData();
+    setContent(data);
+  };
+
   const handleOpen = (e) => {
     e.preventDefault();
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
 
-  const handleChange = (e, editor) => {
-    const data = editor.getData();
-    setContent(data);
-  };
+
+  //ckeditor5 plugin configurations
+  // const editorConfigurations ={
+  //   plugins: [ Table,TableColumnResize ]
+  // }
 
   return (
     <div className="container">
@@ -347,9 +356,9 @@ export const Memo = () => {
             <CKEditor
               editor={ClassicEditor}
               data={content}
-              config={{
-                ckfinder: {},
-              }}
+              config={ {
+                // plugins: ['CKFinder' ],
+            } }
               onChange={handleChange}
             />
           </div>

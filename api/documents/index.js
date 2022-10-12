@@ -1,3 +1,4 @@
+// const logo = require("../documents/logo.png")
 module.exports = ({
   id,
   to,
@@ -48,6 +49,7 @@ module.exports = ({
                   display: flex;
                   flex-direction: row;
                   justify-content: space-between;
+                  margin:10px;
                   align-items: center;
             }
             .status{
@@ -70,6 +72,7 @@ module.exports = ({
             }
             .head{
                   font-family: 'Times New Roman', Times, serif;
+                  padding:5px;
                   letter-spacing: 1px;
                   font-size: 14px;
             }
@@ -103,10 +106,10 @@ module.exports = ({
             <div class="memo-details">
                   <div class="content">
                         <div class="memoId">MEMO ID: ${id}</div>
-                        <div class="status">status:APPROVED</div>
+                        <div class="status">status:</div>
                   </div>
                   <div class="header">
-                        <p class="head">TO: EXECUTIVE DIRECTOR</p>
+                        <p class="head">TO: ${to}</p>
                         <p class="head">FROM:${from}</p>
                         <p class="head">Cc: ${copy || "Not specified"}</p>
                         <p class="head">DATE: ${date.split("T")[0]}</p>
@@ -117,7 +120,6 @@ module.exports = ({
                         <span>Attached Documents:</span>                    
                         <div class="docs" id="doc">       
                             <p id='docs'></p>
-                            
                         </div>
                        
                   </div>
@@ -127,7 +129,10 @@ module.exports = ({
                   </div>
             </div>
       </div>
-     
+//      <script>
+//             const doc = document.getElementById('docs')
+//                   doc.innerHTML = ${files.map((file) => file)}
+//      </script>
 </body>
 </html>
 `;

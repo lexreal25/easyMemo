@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 export const Received = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    if (localStorage.getItem("user") === null) {
+    if (localStorage.getItem("token") === null) {
       navigate("/login");
     }
   }, [navigate]);
@@ -19,7 +19,7 @@ export const Received = () => {
   const filteredMemos = useSelector((state) =>
     state.memo.Memo?.filter(
       (memo) => 
-        memo.copy.replace(/ +/g, "").toLowerCase()  === userkey
+        memo.to.replace(/ +/g, "").toLowerCase()  === userkey
     )
   );
   return (

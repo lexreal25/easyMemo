@@ -1,11 +1,16 @@
 import { useState } from "react";
 import "./newuser.css";
 import axios from "axios";
-// import { dispatch } from "react-redux"
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+//error handling
+const notify = (message) => toast.error(message);
+const success = (message) => toast.success(message);
 
 export const NewUser = () => {
   const [state, setState] = useState({
-    id: "",
+    roleId: "",
     fname: "",
     lname: "",
     role: "",
@@ -17,15 +22,26 @@ export const NewUser = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/auth/register`,
-        state
-      );
-      console.log(res.data);
-    } catch (error) {
-      console.log(error.response.data);
+    if (
+      state.fname ||
+      state.lname ||
+      state.role ||
+      state.roleId ||
+      state.password !== ""
+    ) {
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_BASE_URL}/auth/register`,
+          state
+        );
+        success("User registered successfully");
+      } catch (error) {
+        notify(error.response.data);
+      }
+    } else {
+      notify("Please complete all fields");
     }
+    setState({...state === ""})
   };
   return (
     <div className="newUser">
@@ -71,8 +87,8 @@ export const NewUser = () => {
         <div className="newUserItem">
           <label>Role ID</label>
           <select
-            name="id"
-            id="id"
+            name="roleId"
+            roleId="roleId"
             className="newUserSelect"
             autoComplete="true"
             onChange={handleChange}
@@ -92,6 +108,17 @@ export const NewUser = () => {
           Create
         </button>
       </form>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

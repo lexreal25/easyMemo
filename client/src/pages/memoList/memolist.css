@@ -7,7 +7,7 @@
   position: relative;
   width: 70vw;
   height: 100vh;
-  padding: 1cm;
+  padding: 20px;
   margin: auto;
   border-radius: 5px;
   /* background-color: rgba(240, 233, 233, 0.75); */
@@ -25,6 +25,10 @@
   -moz-box-shadow: 2px 3px 15px 0px rgba(0, 0, 0, 0.75);
   padding: 20px;
 }
+.header > p{
+  padding: 5px;
+  font-size: 15px;
+}
 .header > p > span {
   font-family: "Ibarra Real Nova", serif;
 }
@@ -34,6 +38,7 @@
 }
 .cp {
   font-family: "Ibarra Real Nova", serif;
+  font-size: 25px;
 }
 .comments {
   flex: 1;

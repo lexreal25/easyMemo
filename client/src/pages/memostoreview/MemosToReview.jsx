@@ -8,26 +8,24 @@ import { useSelector } from "react-redux";
 import { useMemo } from "react";
 
 export const Review = () => {
-  
   const navigate = useNavigate();
   const userkey = localStorage.getItem("userkey");
 
   useEffect(() => {
-    if (localStorage.getItem("user") === null) {
+    if (localStorage.getItem("token") === null) {
       navigate("/login");
     }
   }, [navigate]);
 
   const responder = useSelector((state) =>
-    state.comment.comments.filter(
+    state.comment?.comments.filter(
       (c) => c.receiver.replace(/ +/g, "").toLowerCase() === userkey
     )
   );
-  const filteredMemos = useSelector((state) =>
-    state.memo.Memo?.filter(
-      (memo) => memo.to.replace(/ +/g, "").toLowerCase() === userkey
-    )
-  );
+  // var props = ["memoId","receiver"]
+  console.log(responder.map((id) =>id.memoId.replace(/-/g, "")));
+  const filteredMemos = useSelector((state) => state.memo?.Memo);
+
   const revs = useMemo(
     () => getMatchingMemos(filteredMemos, responder),
     [filteredMemos, responder]
@@ -41,6 +39,13 @@ export const Review = () => {
     });
   }
 
+  var res = filteredMemos.filter(function (o1) {
+    return responder.some(function (o2) {
+      return o1.memoId=== "loyalty-1065-2022";
+    });
+  });
+
+  console.log(res);
   return (
     <div className="container">
       <Sidebar />

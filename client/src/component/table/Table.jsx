@@ -4,7 +4,11 @@ import { Link } from "react-router-dom";
 
 export const Table = ({ info }) => {
   const columns = [
-    { field: "id", headerName: "ID", width: 150 },
+    {
+      field: "id",
+      headerName: "ID",
+      width: 150,
+    },
     { field: "date", headerName: "Date", width: 100, type: "date" },
     { field: "to", headerName: "Sent To", width: 200, type: "text" },
     { field: "from", headerName: "Sent By", width: 200, type: "text" },
@@ -38,7 +42,7 @@ export const Table = ({ info }) => {
           boxShadow: 1,
           border: 1,
           fontSize: 12,
-          fontFamily:'sans-serif',
+          fontFamily: "sans-serif",
           fontStyle: "normal",
           borderColor: "primary.light",
           "& .MuiDataGrid-cell:hover": {
@@ -52,6 +56,7 @@ export const Table = ({ info }) => {
         checkboxSelection
         disableSelectionOnClick
         getRowId={(row) => row.id}
+        getRowClassName={(row) =>row.new === true ?"a" : ""}
       />
     </div>
   );

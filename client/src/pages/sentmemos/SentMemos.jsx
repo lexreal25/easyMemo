@@ -17,7 +17,7 @@ export const Sent = () => {
   );
 
   useEffect(() => {
-    if (localStorage.getItem("user") === null) {
+    if (localStorage.getItem("token") === null) {
       navigate("/login");
     }
   }, [navigate]);

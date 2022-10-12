@@ -37,7 +37,7 @@ router.put("/update/:id", async (req, res) => {
 router.get("/",  async (req, res) => {
   const query = req.query.new
   try {
-    const memos = query ? await Memo.find().sort({_id: -1}).limit(20) : await Memo.find();
+    const memos = query ? await Memo.find().sort({_id: -1}).limit(20) : await Memo.find().sort({_id: -1});
     res.status(200).json(memos);
   } catch (err) {
     res.status(500).json(err)

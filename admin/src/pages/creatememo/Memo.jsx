@@ -4,11 +4,12 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useEffect, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import Editor from "ckeditor5-custom-build/build/ckeditor";
+import Table from "@ckeditor/ckeditor5-table/src/table";
 import ReactHtmlParser from "react-html-parser";
 import { style } from "./boxstyle";
 import { users } from "./userData";
-// import file from "../../assets/scan.pdf";
+
 import axios from "axios";
 
 export const Memo = () => {
@@ -92,6 +93,11 @@ export const Memo = () => {
     const filePreview = URL.createObjectURL(selectedFile);
     setPreview(filePreview);
     console.log(filePreview);
+  };
+
+  //ckEditor5 plugins
+  const editorConfiguration = {
+    plugin: [Table],
   };
 
   return (
@@ -253,8 +259,9 @@ export const Memo = () => {
           <div className="memo-text-area">
             {/* helo there */}
             <CKEditor
-              editor={ClassicEditor}
+              editor={Editor}
               data={content}
+              config={editorConfiguration}
               onChange={handleChange}
             />
           </div>

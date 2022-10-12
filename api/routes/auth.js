@@ -5,9 +5,9 @@ const jwt = require("jsonwebtoken");
 
 //create user
 router.post("/register", async (req, res) => {
-  const { id, fname, lname, role } = req.body;
+  const { roleId, fname, lname, role } = req.body;
   const newUser = new User({
-    id,
+    roleId,
     fname,
     lname,
     role,
@@ -15,14 +15,14 @@ router.post("/register", async (req, res) => {
   });
   try {
     //check if user exist
-    if (req.body.id !== (await User.findOne({ id:id }))) {
+    if (req.body.roleId !== (await User.findOne({ roleId:roleId }))) {
       const savedUser = await newUser.save();
       res.status(200).json(savedUser);
     } else {
       res.status(403).json("user exist");
     }
   } catch (err) {
-    res.status(500).json(err);
+    res.status(403).json("User role already created");
   }
 });
 

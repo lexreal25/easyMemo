@@ -25,7 +25,7 @@ export const Login = () => {
       navigate("/");
     }
   }, [navigate]);
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== "" || fname !== "") {
@@ -48,7 +48,7 @@ export const Login = () => {
           }, 2000);
         }
       } catch (error) {
-        notify(error.response.data);
+        notify(error.message);
       }
       setId("");
       setPassword("");
@@ -59,7 +59,7 @@ export const Login = () => {
   return (
     <div className="back">
       <form className="login">
-        <p>easyMemo</p>
+        <p>EasyMemo</p>
         <input
           type="text"
           style={{ textTransform: "uppercase" }}
@@ -70,6 +70,7 @@ export const Login = () => {
         />
         <input
           type="password"
+          style={{ textTransform: "uppercase" }}
           placeholder="Enter password"
           autoComplete="true"
           value={password}

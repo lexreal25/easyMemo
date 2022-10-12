@@ -48,6 +48,11 @@
 .menu-item {
   margin-left: 10px;
 }
+.username{
+  color:#A52294;
+  font-size: 12px;
+  font-weight: bold;
+}
 .sidebarItems.active,
 .sidebarItems:hover {
   background-color: rgb(228, 228, 250);

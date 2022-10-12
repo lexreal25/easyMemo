@@ -3,18 +3,19 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   Create,
   ExitToApp,
-  Home,
   Settings,
   SendOutlined,
   MailOutlined,
   RateReviewOutlined,
+  Person,
 } from "@material-ui/icons";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
 
 export const Sidebar = () => {
   const navigate = useNavigate();
-
+  const { fname, lname } = useSelector((state) => state.user.currentUser);
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.clear();
@@ -59,12 +60,12 @@ export const Sidebar = () => {
                 marginLeft: "10px",
               }}
             >
-              <Link to="/" className="links">
-                <Home style={{ fontSize: "12px" }} />
-                <span style={{ fontSize: "12px", marginLeft: "5px" }}>
-                  RECEIVED MEMOS
+              <div className="">
+                <Person className="sidebarIcon" />
+                <span className="menu-item username">
+                  {fname.toUpperCase() + " " + lname.toUpperCase()}
                 </span>
-              </Link>
+              </div>
             </li>
           </div>
           <ul className="sidebarList">
@@ -74,6 +75,13 @@ export const Sidebar = () => {
                 <span className="menu-item">CREATE MEMO</span>
               </Link>
             </li>
+            <li className="sidebarItems">
+              <Link to="/" className="links">
+                <Create className="sidebarIcon" />
+                <span className="menu-item">RECEIVED MEMOS</span>
+              </Link>
+            </li>
+
             <li className="sidebarItems">
               <Link to="/sent" className="links">
                 <SendOutlined className="sidebarIcon" />

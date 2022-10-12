@@ -9,7 +9,7 @@ export const style = {
       border: "none",
       borderRadius: "5px",
       background: "linear-gradient(pink,rgba(244, 241, 241, 0.75))",
-      boxShadow: 5,
+      boxShadow: 2,
       p: 5,
     };
     

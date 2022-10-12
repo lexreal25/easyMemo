@@ -12,6 +12,7 @@ import { saveAs } from "file-saver";
 import { getComments } from "../../redux/apiCall";
 import { useEffect } from "react";
 import { Sidebar } from "../../component/sidebar/Sidebar";
+import logo from "../../assets/Logo.png";
 import "../../App.css";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -23,31 +24,35 @@ const notify = (message) => toast.error(message);
 const senders = [
   {
     id: 1,
-    name: "EXECUTIVE DIRECTOR",
+    name: "Executive Director",
   },
   {
     id: 2,
-    name: "MANAGING DIRECTOR",
+    name: "Managing Director",
   },
   {
     id: 3,
-    name: "CFO",
+    name: "Chief Financial Officer",
   },
   {
     id: 4,
-    name: "HR MANAGER",
+    name: "Human Resource Manager",
   },
   {
     id: 5,
-    name: "HEAD OF IT",
+    name: "Head Of It Department",
   },
   {
     id: 6,
-    name: "CORPORATE AFFAIRS",
+    name: "Corpotate Affairs",
   },
   {
     id: 7,
-    name: "MARKETING",
+    name: "Marketing Manager",
+  },
+  {
+    id: 8,
+    name: "Auditor",
   },
 ];
 export const MemoList = () => {
@@ -61,9 +66,9 @@ export const MemoList = () => {
   const memoId = location.pathname.split("/")[2].toString();
   const { fname, lname } = useSelector((state) => state.user.currentUser);
   const sender = fname + " " + lname;
-  
+
   useEffect(() => {
-    if (localStorage.getItem("user") === null) {
+    if (localStorage.getItem("token") === null) {
       navigate("/login");
     }
   }, [navigate]);
@@ -72,13 +77,12 @@ export const MemoList = () => {
     state.memo.Memo.find((item) => item.id === memoId)
   );
   const userComment = useSelector((state) => state.comment.comments);
+
   useEffect(() => {
     const creatpdf = async () =>
       await axios
         .post(`${process.env.REACT_APP_BASE_URI}/pdf/createpdf`, memos)
-        .then((res) => {
-          console.log(res.data);
-        });
+        .then((res) => {});
     creatpdf();
   }, [memos]);
 
@@ -94,7 +98,6 @@ export const MemoList = () => {
       })
       .then((err) => {
         notify(err.message);
-        console.log(err);
       });
   };
 
@@ -111,7 +114,7 @@ export const MemoList = () => {
       setOptions("");
       setTimeout(() => {
         getComments(dispatch);
-      }, 1500);
+      }, 1000);
     } catch (error) {
       notify(error.message);
     }
@@ -191,7 +194,9 @@ export const MemoList = () => {
                       alignItems: "center",
                     }}
                   >
-                    <p className="memoID">MEMO ID:({memos.id})</p>
+                    <div>
+                      <p className="memoID">MEMO ID:({memos.id})</p>
+                    </div>
                     <div
                       style={{
                         fontSize: "12px",
@@ -199,17 +204,32 @@ export const MemoList = () => {
                         fontFamily: "'Ibarra Real Nova', serif",
                       }}
                     >
-                      status: {memos.status}
+                      <img
+                        src={logo}
+                        alt="logo"
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "contain",
+                        }}
+                      />
+                      {/* <p>status: {memos.status}</p> */}
                     </div>
                   </div>
                 </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                <Typography id="modal-modal-description" sx={{ mt: 5 }}>
                   <div className="header">
                     <p>
                       <span>TO</span> : {memos.to}
                     </p>
                     <p>
-                      <span>FROM</span> : {memos.from}
+                      <span>FROM</span> : {memos.from.toUpperCase()}
+                    </p>
+                    <p>
+                      <span>Cc</span> : {memos.copy.toUpperCase()}
+                    </p>
+                    <p>
+                      <span>THROUGH</span> : {memos.through}
                     </p>
                     <p className="date">
                       <span>DATE</span> :{" "}
@@ -227,7 +247,7 @@ export const MemoList = () => {
                         `<p className="cp">${memos.content}</p>`
                       )}
                     </div>
-                    {memos.files[0] !== '' && (
+                    {memos.files[0] !== "" && (
                       <div
                         className="content-attachement"
                         style={{ fontSize: "12px", marginBottom: "10px" }}
