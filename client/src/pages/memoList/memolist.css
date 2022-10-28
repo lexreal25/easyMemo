@@ -28,7 +28,7 @@
 .header > p{
   padding: 5px;
   font-size: 15px;
-}
+}doc_atc
 .header > p > span {
   font-family: "Ibarra Real Nova", serif;
 }
@@ -156,5 +156,6 @@
   outline: none;
 }
 .doc_atc{
-  cursor:pointer
+  cursor:pointer;
+  margin-left:5px
 }

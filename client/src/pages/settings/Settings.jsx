@@ -85,7 +85,7 @@ export const Settings = () => {
                 </div>
                 <button
                   className="userUpdateBtn"
-                  onclick={() => handleUpdate()}
+                  onClick={() => handleUpdate()}
                 >
                   Update
                 </button>

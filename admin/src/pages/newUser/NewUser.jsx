@@ -85,6 +85,15 @@ export const NewUser = () => {
           />
         </div>
         <div className="newUserItem">
+          <label>Signature</label>
+          <input
+            type="file"
+            name="signature"
+            placeholder="upload signature"
+            onChange={handleChange}
+          />
+        </div>
+        <div className="newUserItem">
           <label>Role ID</label>
           <select
             name="roleId"

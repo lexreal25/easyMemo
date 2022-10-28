@@ -9,10 +9,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { getComments } from "../../redux/apiCall";
+// import { getComments } from "../../redux/apiCall";
 import { useEffect } from "react";
 import { Sidebar } from "../../component/sidebar/Sidebar";
-import logo from "../../assets/Logo.png";
 import "../../App.css";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -59,24 +58,52 @@ export const MemoList = () => {
   const [open, setOpen] = useState(false);
   const [comments, setText] = useState("");
   const [options, setOptions] = useState("");
+  const [memo, setMemo] = useState([]);
+  const [comment, setComment] = useState([]);
 
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const memoId = location.pathname.split("/")[2].toString();
-  const { fname, lname } = useSelector((state) => state.user.currentUser);
+  const { fname, lname, role } = useSelector((state) => state.user.currentUser);
   const sender = fname + " " + lname;
 
+  const userkey = localStorage.getItem("userkey");
   useEffect(() => {
     if (localStorage.getItem("token") === null) {
       navigate("/login");
     }
-  }, [navigate]);
-  //fetch memo from redux
-  const memos = useSelector((state) =>
-    state.memo.Memo.find((item) => item.id === memoId)
-  );
-  const userComment = useSelector((state) => state.comment.comments);
+    fetchData();
+    fetchComment();
+  }, [navigate, dispatch]);
+
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_BASE_URI}/memo/`, {
+        headers: {
+          token: "Bearer " + JSON.parse(localStorage.getItem("token")),
+        },
+      });
+      setMemo(res.data);
+    } catch (error) {}
+  };
+
+  const fetchComment = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_BASE_URI}/comment/`,
+        {
+          headers: {
+            token: "Bearer " + JSON.parse(localStorage.getItem("token")),
+          },
+        }
+      );
+      setComment(res.data);
+    } catch (error) {}
+  };
+
+  const memos = memo.find((item) => item.id === memoId);
 
   useEffect(() => {
     const creatpdf = async () =>
@@ -104,16 +131,24 @@ export const MemoList = () => {
   const handleSend = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${process.env.REACT_APP_BASE_URI}/comment/`, {
-        receiver: options,
-        memoId,
-        comment: { message: comments, from: sender },
-      });
+      await axios.post(
+        `${process.env.REACT_APP_BASE_URI}/comment/`,
+        {
+          receiver: options,
+          memoId,
+          comment: { message: comments, from: sender },
+        },
+        {
+          headers: {
+            token: "Bearer " + JSON.parse(localStorage.getItem("token")),
+          },
+        }
+      );
       setOpen(false);
       setText("");
       setOptions("");
       setTimeout(() => {
-        getComments(dispatch);
+        fetchComment(dispatch);
       }, 1000);
     } catch (error) {
       notify(error.message);
@@ -133,6 +168,27 @@ export const MemoList = () => {
   const handleSelect = (e) => {
     e.preventDefault();
     setOptions(e.target.value);
+  };
+  // const all = comment.filter((comment, index) => comment.memoId === memoId);
+
+  const handleApprove = async () => {
+    //update memo
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_BASE_URI}/memo/update/${memos?.id}`,
+        {
+          status: "Approved",
+          approvedby: role,
+        },
+        {
+          headers: {
+            token: "Bearer " + JSON.parse(localStorage.getItem("token")),
+          },
+        }
+      );
+    } catch (error) {
+      notify(error.response.data);
+    }
   };
   return (
     <div className="container">
@@ -195,7 +251,33 @@ export const MemoList = () => {
                     }}
                   >
                     <div>
-                      <p className="memoID">MEMO ID:({memos.id})</p>
+                      <p className="memoID">MEMO ID:({memos?.id})</p>
+                      <div>
+                        <span
+                          style={{
+                            color: "teal",
+                            fontSize: "12px",
+                            paddingRight: "5px",
+                          }}
+                        >
+                          Status: {memos?.status}
+                        </span>
+                        <button
+                          disabled={
+                            memos?.status === "Pending" &&
+                            (userkey === "executivedirector" ||
+                              userkey === "manangingdirector")
+                              ? ""
+                              : "true"
+                          }
+                          onClick={handleApprove}
+                          style={{
+                            cursor: "pointer",
+                          }}
+                        >
+                          Approve
+                        </button>
+                      </div>
                     </div>
                     <div
                       style={{
@@ -205,7 +287,9 @@ export const MemoList = () => {
                       }}
                     >
                       <img
-                        src={logo}
+                        src={
+                          "http://res.cloudinary.com/lexreal1/image/upload/v1666785970/upload/gcd2hfmso4vvgtcl6ra4.png"
+                        }
                         alt="logo"
                         style={{
                           width: "50px",
@@ -213,30 +297,30 @@ export const MemoList = () => {
                           objectFit: "contain",
                         }}
                       />
-                      {/* <p>status: {memos.status}</p> */}
                     </div>
                   </div>
                 </Typography>
                 <Typography id="modal-modal-description" sx={{ mt: 5 }}>
                   <div className="header">
                     <p>
-                      <span>TO</span> : {memos.to}
+                      <span>TO</span> : {memos?.to}
                     </p>
                     <p>
-                      <span>FROM</span> : {memos.from.toUpperCase()}
+                      <span>FROM</span> : {memos?.from.toUpperCase()}
                     </p>
                     <p>
-                      <span>Cc</span> : {memos.copy.toUpperCase()}
+                      <span>Cc</span> : {memos?.copy.toUpperCase()}
                     </p>
                     <p>
-                      <span>THROUGH</span> : {memos.through}
+                      <span>THROUGH</span> : {memos?.through}
                     </p>
                     <p className="date">
                       <span>DATE</span> :{" "}
-                      {memos.date.split("T")[0] || "no date"} {memos.createdAt}
+                      {memos?.date.split("T")[0] || "no date"}{" "}
+                      {memos?.createdAt}
                     </p>
                     <p className="pg">
-                      SUBJECT : <span>{memos.subject || "No Subject"}</span>
+                      SUBJECT : <span>{memos?.subject || "No Subject"}</span>
                     </p>
                   </div>
                 </Typography>
@@ -244,22 +328,29 @@ export const MemoList = () => {
                   <div className="content-details">
                     <div className="cp-text">
                       {ReactHtmlParser(
-                        `<p className="cp">${memos.content}</p>`
+                        `<p className="cp">${memos?.content}</p>`
                       )}
                     </div>
-                    {memos.files[0] !== "" && (
+                    {memos?.files[0] !== [] && (
                       <div
                         className="content-attachement"
                         style={{ fontSize: "12px", marginBottom: "10px" }}
                       >
                         {" "}
                         Attachments:
-                        {memos.files?.map((file, i) => (
+                        {memos?.files?.map((file, i) => (
                           <div key={i} style={{ marginTop: "4px" }}>
-                            name of doc{" "}
+                            <span
+                              style={{
+                                fontSize: "15px",
+                                textTransform: "uppercase",
+                              }}
+                            >
+                              {file.file_name}:
+                            </span>
                             <button
                               className="doc_atc"
-                              onClick={() => window.open(file)}
+                              onClick={() => window.open(file.url)}
                             >
                               View Document
                             </button>
@@ -275,7 +366,7 @@ export const MemoList = () => {
                   >
                     <span>
                       <img
-                        src={memos.signature}
+                        src={memos?.signature}
                         alt="signature"
                         style={{
                           width: "50px",
@@ -285,7 +376,7 @@ export const MemoList = () => {
                       />
                     </span>
                     <p style={{ fontSize: "12px", marginBottom: "10px" }}>
-                      ( {memos.sender} )
+                      ( {memos?.sender} )
                     </p>
                   </div>
                 </Typography>
@@ -299,14 +390,14 @@ export const MemoList = () => {
               <span
                 style={{ borderBottom: "2px solid purple", color: "GrayText" }}
               >
-                Comments
+                MINUTES
               </span>
               <div className="add-comment" onClick={handleComment}>
                 <div className="memo-addBtn">
                   <AddOutlined style={{ fontSize: "20px" }} />
                 </div>
               </div>
-              {userComment?.map(
+              {comment?.map(
                 (comment, index) =>
                   comment.memoId === memoId && (
                     <div className="comment-details" key={index}>

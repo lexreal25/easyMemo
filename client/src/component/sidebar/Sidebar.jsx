@@ -8,6 +8,7 @@ import {
   MailOutlined,
   RateReviewOutlined,
   Person,
+  InboxOutlined,
 } from "@material-ui/icons";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,7 +16,7 @@ import { useSelector } from "react-redux";
 
 export const Sidebar = () => {
   const navigate = useNavigate();
-  const { fname, lname } = useSelector((state) => state.user.currentUser);
+  const role = useSelector((state) => state.user.currentUser?.role);
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.clear();
@@ -46,67 +47,67 @@ export const Sidebar = () => {
             className="meu-home"
             style={{
               display: "flex",
-              flexDirection: "row",
+              flexDirection: "coloumn",
               alignItems: "center",
             }}
           >
             <h3 className="sidebarTitle">Menu |</h3>
-            <li
+            <div
               className=" active"
               style={{
                 textDecoration: "underline",
                 display: "flex",
                 alignItems: "center",
-                marginLeft: "10px",
+                marginLeft: "5px",
               }}
             >
               <div className="">
                 <Person className="sidebarIcon" />
                 <span className="menu-item username">
-                  {fname.toUpperCase() + " " + lname.toUpperCase()}
+                  {role?.toUpperCase()}
                 </span>
               </div>
-            </li>
+            </div>
           </div>
           <ul className="sidebarList">
-            <li className="sidebarItems">
-              <Link to="/memo" className="links">
+            <Link to="/" className="links">
+              <li className="sidebarItems">
+                <InboxOutlined className="sidebarIcon" />
+                <span className="menu-item">RECEIVED MEMOS</span>
+              </li>
+            </Link>
+            <Link to="/memo" className="links">
+              <li className="sidebarItems">
                 <Create className="sidebarIcon" />
                 <span className="menu-item">CREATE MEMO</span>
-              </Link>
-            </li>
-            <li className="sidebarItems">
-              <Link to="/" className="links">
-                <Create className="sidebarIcon" />
-                <span className="menu-item">RECEIVED MEMOS</span>
-              </Link>
-            </li>
+              </li>
+            </Link>
 
-            <li className="sidebarItems">
-              <Link to="/sent" className="links">
+            <Link to="/sent" className="links">
+              <li className="sidebarItems">
                 <SendOutlined className="sidebarIcon" />
                 <span className="menu-item">SENT MEMOS</span>
-              </Link>
-            </li>
-            <li className="sidebarItems">
-              <Link to="/copied" className="links">
+              </li>
+            </Link>
+
+            <Link to="/copied" className="links">
+              <li className="sidebarItems">
                 <MailOutlined className="sidebarIcon" />
                 <span className="menu-item">COPIED MEMOS</span>
-              </Link>
-            </li>
-            <li className="sidebarItems">
-              <Link to="/review" className="links">
+              </li>
+            </Link>
+            <Link to="/review" className="links">
+              <li className="sidebarItems">
                 <RateReviewOutlined className="sidebarIcon" />
                 <span className="menu-item">MEMOS TO REVIEW</span>
-              </Link>
-            </li>
-            <li className="sidebarItems">
-              <Link to="/edit/:userId" className="links">
+              </li>
+            </Link>
+            <Link to="/edit/:userId" className="links">
+              <li className="sidebarItems">
                 <Settings className="sidebarIcon" />
-                <span className="menu-item">Settings</span>
-              </Link>
-            </li>
-
+                <span className="menu-item">SETTINGS</span>
+              </li>
+            </Link>
             <li className="sidebarItems">
               <ExitToApp className="sidebarIcon" />
               <span className="menu-item" onClick={handleLogout}>

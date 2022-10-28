@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useEffect, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import Editor from "ckeditor5-custom-build/build/ckeditor";
+// import Editor from "ckeditor5-custom-build/build/ckeditor";
 import Table from "@ckeditor/ckeditor5-table/src/table";
 import ReactHtmlParser from "react-html-parser";
 import { style } from "./boxstyle";
@@ -95,10 +95,6 @@ export const Memo = () => {
     console.log(filePreview);
   };
 
-  //ckEditor5 plugins
-  const editorConfiguration = {
-    plugin: [Table],
-  };
 
   return (
     <div className="memo">
@@ -257,12 +253,8 @@ export const Memo = () => {
             />
           </div>
           <div className="memo-text-area">
-            {/* helo there */}
-            <CKEditor
-              editor={Editor}
-              data={content}
-              config={editorConfiguration}
-              onChange={handleChange}
+            {/* helo thereck*/}
+          
             />
           </div>
           <div className="btn">

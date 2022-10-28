@@ -4,10 +4,11 @@ import "./signatories.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import "./table/table.css";
+
 export const Users = () => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
-    const getUsers = async (users) => {
+    const getUsers = async () => {
      const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/user/`, {
         headers: {
           token: "Bearer " + localStorage.getItem("token"),

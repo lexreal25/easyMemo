@@ -1,4 +1,3 @@
-// const logo = require("../documents/logo.png")
 module.exports = ({
   id,
   to,
@@ -14,90 +13,14 @@ module.exports = ({
 }) => {
   return `
       <!DOCTYPE html>
-<html lang="en">
-<head>
+      <html lang="en">
+      <head>
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Document</title>
       <style>
-            /* .memo-page{
-                  background: white;
-                  width: 21cm;
-                  height: 20.0cm;
-                  display: block;
-                  margin: 0 auto;
-                  padding: 20px;
-                  margin-bottom: 0.5cm;
-                  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-            } */
-            .memo-page{
-                  width: 21cm;
-                  height: 29.7cm;
-                  margin:0 auto;
-                  display: block;
-                  padding: 20px;
-                  margin-bottom: 0.5cm;
-            }
-            .memo-details{
-                  margin: 15px;
-            }
-            .memoId{
-                  color: #A52294;
-            }
-            .content{
-                  display: flex;
-                  flex-direction: row;
-                  justify-content: space-between;
-                  margin:10px;
-                  align-items: center;
-            }
-            .status{
-                font-size: 12px;
-                color: green;
-                font-family: 'Times New Roman', Times, serif
-            }
-            .subject{
-                  text-decoration: underline;
-                  font-weight: bold;
-                  text-transform: upperCase;
-            }
-            .docs{
-                  display:flex;
-                  flex-direction: column;
-                  margin: 5px;
-            }
-            .docs span{
-                  padding: 5px;
-            }
-            .head{
-                  font-family: 'Times New Roman', Times, serif;
-                  padding:5px;
-                  letter-spacing: 1px;
-                  font-size: 14px;
-            }
-            /* @media print {
-                  @page {
-                        size: 210mm 297mm;
-                        margin: 0;
-                        margin-right: 0;
-                  }
-            } */
-            @page{
-                  size: A4;
-                  background: white;
-                  width: 21cm;
-                  height: 29.7cm;
-                  display: block;
-                  margin: 0 auto;
-                  margin-bottom: 0.5cm;
-            }
-            @media print {
-                  html, body{
-                        width: 210mm;
-                        height: 297mm;
-                  }
-            }
+           
       </style>
 </head>
 <body>
@@ -105,13 +28,73 @@ module.exports = ({
       <div class="memo-page">
             <div class="memo-details">
                   <div class="content">
-                        <div class="memoId">MEMO ID: ${id}</div>
-                        <div class="status">status:</div>
+                  .memo-page{
+                        width: 21cm;
+                        height: 29.7cm;
+                        margin: auto;
+                        background-color: rgba(240, 233, 233, 0.75);
+                        padding: 20px;
+                        margin-bottom: 0.5cm;
+                  }
+                  .memo-details{
+                        padding-top: 20px;
+                        padding-left: 15px;
+                        padding-right: 15px;
+                  }
+                  .memoId{
+                        color: #A52294;
+                  }
+                  .content{
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        align-items: center;
+                  }
+                  .status{
+                      font-size: 12px;
+                      color: green;
+                      font-family: 'Times New Roman', Times, serif
+                  }
+                  .subject{
+                        text-decoration: underline;
+                        margin: 20px 0 20px 0;
+                        font-weight: bold;
+                  }
+                  .docs{
+                        display:flex;
+                        flex-direction: column;
+                        margin: 5px;
+                  }
+                  .docs span{
+                        padding: 5px;
+                  }
+                  .head{
+                        font-family: 'Times New Roman', Times, serif;
+                        letter-spacing: 1.2px;
+                        font-size: 14px;
+                  }
+                 .header{
+                  margin-top: 25px;
+                 }
+                 .signature{
+                  margin-top: 25px;
+                 }
+                  @page{
+                        size: A4;
+                        margin: 0;
+                  }
+                  @media print {
+                        html, body{
+                              width: 210mm;
+                              height: 297mm;
+                        }
+                  }        <div class="memoId">MEMO ID: ${id}</div>
+                        // <div class="status">status:</div>
                   </div>
                   <div class="header">
                         <p class="head">TO: ${to}</p>
                         <p class="head">FROM:${from}</p>
-                        <p class="head">Cc: ${copy || "Not specified"}</p>
+                        <p class="head">Cc: ${copy}</p>
                         <p class="head">DATE: ${date.split("T")[0]}</p>
                         <p class="head subject">SUBJECT: ${subject}</p>
                   </div>
@@ -129,11 +112,10 @@ module.exports = ({
                   </div>
             </div>
       </div>
-//      <script>
-//             const doc = document.getElementById('docs')
-//                   doc.innerHTML = ${files.map((file) => file)}
-//      </script>
+      {/* //      <script>
+      //             const doc = document.getElementById('docs')
+      //                   doc.innerHTML = ${files.map((file) => file)}
+      //      </script> */}
 </body>
 </html>
-`;
-};
+`};

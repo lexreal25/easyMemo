@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import "./login.css";
 import axios from "axios";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginStart, loginSuccess } from "../../redux/userRedux";
 
@@ -14,7 +14,7 @@ const notify = (message) => toast.error(message);
 const success = (message) => toast.success(message);
 
 export const Login = () => {
-  const [fname, setId] = useState("");
+  const [fname, setFname] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
@@ -48,29 +48,31 @@ export const Login = () => {
           }, 2000);
         }
       } catch (error) {
-        notify(error.message);
+        notify(error.response.data);
       }
-      setId("");
+      setFname("");
       setPassword("");
     } else {
       notify("login details incorrect");
     }
   };
+  const userid = useSelector((state) =>
+    state.user.currentUser?.role.replace(/ +/g, "").toLowerCase()
+  );
+  localStorage.setItem("userkey", userid);
   return (
     <div className="back">
       <form className="login">
         <p>EasyMemo</p>
         <input
           type="text"
-          style={{ textTransform: "uppercase" }}
           placeholder="Enter your firstname"
           autoComplete="true"
           value={fname}
-          onChange={(e) => setId(e.target.value)}
+          onChange={(e) => setFname(e.target.value)}
         />
         <input
           type="password"
-          style={{ textTransform: "uppercase" }}
           placeholder="Enter password"
           autoComplete="true"
           value={password}

@@ -35,7 +35,7 @@ function App() {
       <Topbar />
       <Routes>
         <Route path="/">
-          <Route index element={<Home />} />
+          <Route index element={<Received />} />
           <Route path="memo" element={<Memo />} />
           <Route path="edit/:userId" element={<Settings />} />
           <Route path="memo/:memoId" element={<MemoList />} />
@@ -43,7 +43,7 @@ function App() {
           <Route path="sent" element={<Sent />} />
           <Route path="review" element={<Review />} />
           <Route path="copied" element={<CopiedMemos />} />
-          <Route path="received" element={<Received />} />
+          <Route path="received" element={<Home />} />
         </Route>
       </Routes>
     </Router>

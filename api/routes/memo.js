@@ -15,7 +15,6 @@ const newMemo = new Memo(req.body)
     res.json(err)
   }
 })
-
 //update memo
 verifyTokenAuthorization
 router.put("/update/:id", async (req, res) => {
@@ -33,6 +32,15 @@ router.put("/update/:id", async (req, res) => {
   }
 });
 
+//get memo by receiver id
+router.get("/mymemos/:to",verifyTokenAuthorization, async (req, res,next) => {
+  try {
+    const mymemos = await Memos.find(req.params.to).sort({_id: -1});
+    res.status(200).json(mymemos);
+  } catch (error) {
+    res.status(401).json("No memo found")
+  }
+})
 //get all memo
 router.get("/",  async (req, res) => {
   const query = req.query.new

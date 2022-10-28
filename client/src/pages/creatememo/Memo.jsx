@@ -7,7 +7,6 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic/build/ckeditor";
 import ReactHtmlParser from "react-html-parser";
 import { style } from "./boxstyle";
-import { users } from "./userData";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../../component/sidebar/Sidebar";
@@ -15,7 +14,6 @@ import "../../App.css";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 
 const notify = (message) => toast.error(message);
 const success = (message) => toast.success(message);
@@ -33,7 +31,8 @@ export const Memo = () => {
   const [files, setFile] = useState([]);
   const [uploadedfile, setUploadedFile] = useState("");
   const [uploadsig, setUploadSig] = useState("");
-  const [setFileName] = useState("");
+  const [filename, setFileName] = useState("");
+  const [users, setUsers] = useState([]);
 
   const navigate = useNavigate();
   const { fname, lname, role } = useSelector(
@@ -45,8 +44,22 @@ export const Memo = () => {
       navigate("/login");
     }
     genId();
+    allUsers();
   }, [navigate]);
 
+  //get all users
+  const allUsers = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_BASE_URI}/user/`, {
+        headers: {
+          token: "Bearer " + JSON.parse(localStorage.getItem("token")),
+        },
+      });
+      setUsers(res.data);
+    } catch (error) {
+      notify(error.response.data);
+    }
+  };
   //generate unique id for each memo
   const genId = async () => {
     const date = new Date();
@@ -57,10 +70,11 @@ export const Memo = () => {
   //upload attachement
   const uploadDoc = async (e) => {
     e.preventDefault();
-    try {
-      if (files) {
+    if (files) {
+      try {
         await Promise.all(
           Object.values(files).map(async (file) => {
+            success("uploading document(s)...");
             const doc = new FormData();
             doc.append("file", file);
             doc.append("upload_preset", "upload");
@@ -69,24 +83,25 @@ export const Memo = () => {
               doc,
               { reportProgress: true }
             );
+            success("upload successful");
             let { url, original_filename } = uploadedFiles.data;
+            console.log(url);
             setUploadedFile(url);
             setFileName(original_filename);
-            success("upload successful");
           })
         );
+      } catch (error) {
+        notify(error.message);
       }
-      return notify("Select file(s) to upload");
-    } catch (error) {
-      notify(error.response.data.error.message);
     }
+    return notify("Select file(s) to upload");
   };
   //attach signature
   const uploadSignature = async (e) => {
     e.preventDefault();
     if (signature === "") notify("Please upload your signature");
     else {
-      success("Uploading signature");
+      success("Uploading signature....");
       const sig = new FormData();
       sig.append("file", signature);
       sig.append("upload_preset", "upload");
@@ -102,7 +117,7 @@ export const Memo = () => {
         success("upload successful");
         setUploadSig(url);
       } catch (error) {
-        notify(error.response.data.error.message);
+        notify(error.message);
       }
     }
   };
@@ -125,13 +140,21 @@ export const Memo = () => {
           copy,
           sender: name,
           signature: uploadsig,
-          files: uploadedfile,
+          files: {
+            file_name: filename,
+            url: uploadedfile,
+          },
         };
         await axios.post(
           `${process.env.REACT_APP_BASE_URI}/memo/memos`,
-          newMemo
+          newMemo,
+          {
+            headers: {
+              token: "Bearer " + JSON.parse(localStorage.getItem("token")),
+            },
+          }
         );
-        console.log(newMemo)
+        
         success("Memo sent successfully");
       } catch (err) {
         notify(err.message);
@@ -166,12 +189,6 @@ export const Memo = () => {
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
-
-
-  //ckeditor5 plugin configurations
-  // const editorConfigurations ={
-  //   plugins: [ Table,TableColumnResize ]
-  // }
 
   return (
     <div className="container">
@@ -257,38 +274,46 @@ export const Memo = () => {
                 value={to}
                 name="to"
               >
-                {users.map((user) => (
+                {users?.map((user) => (
                   <option
-                    defaultValue={user.default}
-                    key={user.id}
-                    value={user.name}
+                    defaultValue={user.role}
+                    key={user?.roleId}
+                    value={user?.role}
                   >
-                    {user.name}
+                    {user?.role.toUpperCase()}
                   </option>
                 ))}
               </select>
             </div>
             <div className="memo-div">
               <label>Cc:</label>
-              <input
-                type="text"
-                className="memo-input"
-                placeholder="If applicable"
+              <select
+                className="to-selector"
+                onChange={(e) => setCopy(e.target.value)}
                 value={copy}
                 name="copy"
-                onChange={(e) => setCopy(e.target.value)}
-              />
+              >
+                {users?.map((user) => (
+                  <option key={user?.roleId} value={user?.role}>
+                    {user?.role.toUpperCase()}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="memo-div">
               <label>Through:</label>
-              <input
-                type="text"
-                className="memo-input"
-                placeholder="If applicable"
+              <select
+                className="to-selector"
+                onChange={(e) => setThrough(e.target.value)}
                 value={through}
                 name="through"
-                onChange={(e) => setThrough(e.target.value)}
-              />
+              >
+                {users?.map((user) => (
+                  <option key={user?.roleId} value={user?.role}>
+                    {user?.role.toUpperCase()}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="memo-div">
               <label>From:</label>
@@ -356,9 +381,11 @@ export const Memo = () => {
             <CKEditor
               editor={ClassicEditor}
               data={content}
-              config={ {
-                // plugins: ['CKFinder' ],
-            } }
+              config={
+                {
+                  // plugins: ['CKFinder' ],
+                }
+              }
               onChange={handleChange}
             />
           </div>

@@ -76,7 +76,7 @@ export const Sidebar = () => {
             <li className="sidebarItems">
               <Link to="/settings" className="links">
                 <Settings className="sidebarIcon" />
-                <span className="menu-item">Settings</span>
+                <span className="menu-item">SETTINGS</span>
               </Link>
             </li>
             <li className="sidebarItems">

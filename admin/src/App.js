@@ -2,7 +2,7 @@ import "./App.css";
 import { Sidebar } from "./component/sidebar/Sidebar";
 import { Topbar } from "./component/topbar/Topbar";
 import { Home } from "./pages/home/Home";
-import { Memo } from "./pages/creatememo/Memo";
+// import { Memo } from "./pages/creatememo/Memo";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Pendingmemo } from "./pages/pendingmemo/Pendingmemo";
 import { Archives } from "./pages/archives/Archives";
@@ -21,7 +21,7 @@ function App() {
         <Routes>
           <Route path="/">
             <Route index element={<Home />} />
-            <Route path="memo" element={<Memo />} />
+            {/* <Route path="memo" element={<Memo />} /> */}
             <Route path="pending" element={<Pendingmemo />} />
             <Route path="login" element={<Login />} />
             <Route path="users" element={<Users />} />
