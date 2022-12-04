@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
     role: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     admin: { type: Boolean, default: false },
+    signature: { type: String, required: true,trim:true}
   },
   { timestamps: true }
 );
