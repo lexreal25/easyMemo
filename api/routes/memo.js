@@ -6,8 +6,8 @@ const {
 } = require("./verifytoken");
 
 //create memo
-router.post("/memos", async (req, res) => {
-  const newMemo = new Memo(req.body);
+router.post("/memos",verifyTokenAuthorization, async (req, res) => {
+const newMemo = new Memo(req.body)
   try {
     const memo = await newMemo.save();
     res.status(200).json(memo);
@@ -18,7 +18,7 @@ router.post("/memos", async (req, res) => {
 
 //update memo
 verifyTokenAuthorization;
-router.put("/update/:id", async (req, res) => {
+router.put("/update/:id",verifyTokenAuthorization, async (req, res) => {
   try {
     const updatedMemo = await Memo.findByIdAndUpdate(
       req.params.id,
