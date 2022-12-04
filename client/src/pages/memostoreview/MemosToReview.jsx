@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { Sidebar } from "../../component/sidebar/Sidebar";
-import { Table } from "../../component/table/Table";
 import { useNavigate } from "react-router-dom";
 import "./review.css";
 import "../../App.css";
-import { useDispatch, useSelector } from "react-redux";
-import { useMemo } from "react";
+import { useDispatch } from "react-redux";
 import axios from "axios";
+import { Notification } from "../../component/notification/notification";
+import { Message } from "../../component/noMemo/message";
+import { Table } from "../../component/table/Table";
 
 export const Review = () => {
   const [review, setReview] = useState([]);
+  const [comment, setComment] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,11 +23,24 @@ export const Review = () => {
     }
   }, [navigate]);
 
-  const responder = useSelector((state) =>
-    state.comment?.comments.filter(
-      (c) => c?.receiver.replace(/ +/g, "").toLowerCase() === userkey
-    )
+  const responder = comment?.filter(
+    (c) => c?.receiver.replace(/ +/g, "").toLowerCase() === userkey
   );
+
+  const fetchComment = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_BASE_URI}/comment/`,
+        {
+          headers: {
+            token: "Bearer " + JSON.parse(localStorage.getItem("token")),
+          },
+        }
+      );
+      setComment(res.data);
+    } catch (error) {}
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,15 +53,9 @@ export const Review = () => {
       } catch (error) {}
     };
     fetchData();
-  }, [dispatch]);
-
-  const filteredMemos = review.filter(
-    (memo) => memo.from.replace(/ +/g, "").toLowerCase() === userkey
-  );
-  const revs = useMemo(
-    () => getMatchingMemos(filteredMemos, responder),
-    [filteredMemos, responder]
-  );
+    fetchComment();
+    getMatchingMemos(review, responder);
+  }, [dispatch, review, responder]);
 
   function getMatchingMemos(m, c) {
     return m.filter((memo) => {
@@ -55,18 +64,29 @@ export const Review = () => {
       });
     });
   }
-  // var res = filteredMemos.filter(function (o1) {
-  //   return !responder.some(function (o2) {
-  //     return o1.id.toString() === o2.memoId.toString();
-  //   });
-  // });
+  const revs = getMatchingMemos(review, responder);
 
   return (
     <div className="container">
       <Sidebar />
       <div className="sent">
-        <Table info={revs} />
+      {revs.length !== 0 ? (
+          <Table details={revs} />
+        ) : (
+         <Message/>
+        )}
       </div>
+      {revs?.map((memo) =>
+        memo.new ? (
+          <Notification
+            message={{
+              id: memo?.id,
+              sender: memo?.sender,
+              subject: memo?.subject,
+            }}
+          />
+        ) : null
+      )}
     </div>
   );
 };

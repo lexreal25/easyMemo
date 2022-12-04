@@ -14,7 +14,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 
-export const Sidebar = () => {
+export const Sidebar = ({ msg }) => {
   const navigate = useNavigate();
   const role = useSelector((state) => state.user.currentUser?.role);
   const handleLogout = (e) => {
@@ -73,7 +73,10 @@ export const Sidebar = () => {
             <Link to="/" className="links">
               <li className="sidebarItems">
                 <InboxOutlined className="sidebarIcon" />
-                <span className="menu-item">RECEIVED MEMOS</span>
+                <div>
+                  <span className="menu-item">RECEIVED MEMOS</span>
+                  {/* <span className="notify"> {msg}</span> */}
+                </div>
               </li>
             </Link>
             <Link to="/memo" className="links">
@@ -94,6 +97,7 @@ export const Sidebar = () => {
               <li className="sidebarItems">
                 <MailOutlined className="sidebarIcon" />
                 <span className="menu-item">COPIED MEMOS</span>
+                {/* <span className="notify"> {msg}</span> */}
               </li>
             </Link>
             <Link to="/review" className="links">

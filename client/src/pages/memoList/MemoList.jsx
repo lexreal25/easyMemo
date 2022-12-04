@@ -9,57 +9,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { saveAs } from "file-saver";
-// import { getComments } from "../../redux/apiCall";
+
 import { useEffect } from "react";
 import { Sidebar } from "../../component/sidebar/Sidebar";
 import "../../App.css";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { CommentPdf } from "./CommentPdf";
 
 const notify = (message) => toast.error(message);
 // const success = (message) => toast.success(message);
 
-const senders = [
-  {
-    id: 1,
-    name: "Executive Director",
-  },
-  {
-    id: 2,
-    name: "Managing Director",
-  },
-  {
-    id: 3,
-    name: "Chief Financial Officer",
-  },
-  {
-    id: 4,
-    name: "Human Resource Manager",
-  },
-  {
-    id: 5,
-    name: "Head Of It Department",
-  },
-  {
-    id: 6,
-    name: "Corpotate Affairs",
-  },
-  {
-    id: 7,
-    name: "Marketing Manager",
-  },
-  {
-    id: 8,
-    name: "Auditor",
-  },
-];
 export const MemoList = () => {
   const [open, setOpen] = useState(false);
   const [comments, setText] = useState("");
   const [options, setOptions] = useState("");
   const [memo, setMemo] = useState([]);
   const [comment, setComment] = useState([]);
+  const [user, setUsers] = useState([]);
 
   const location = useLocation();
   const dispatch = useDispatch();
@@ -76,6 +44,7 @@ export const MemoList = () => {
     }
     fetchData();
     fetchComment();
+    users();
   }, [navigate, dispatch]);
 
   const fetchData = async () => {
@@ -89,6 +58,18 @@ export const MemoList = () => {
     } catch (error) {}
   };
 
+  const users = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_BASE_URI}/user/`, {
+        headers: {
+          token: "Bearer " + JSON.parse(localStorage.getItem("token")),
+        },
+      });
+      setUsers(res.data);
+    } catch (error) {
+      notify(error.response.data);
+    }
+  };
   const fetchComment = async () => {
     try {
       const res = await axios.get(
@@ -169,7 +150,6 @@ export const MemoList = () => {
     e.preventDefault();
     setOptions(e.target.value);
   };
-  // const all = comment.filter((comment, index) => comment.memoId === memoId);
 
   const handleApprove = async () => {
     //update memo
@@ -190,6 +170,9 @@ export const MemoList = () => {
       notify(error.response.data);
     }
   };
+
+  //download minutes
+  let c = comment.filter((comment) => comment.memoId === memoId);
   return (
     <div className="container">
       <ToastContainer
@@ -225,9 +208,9 @@ export const MemoList = () => {
                 value={options}
                 onChange={handleSelect}
               >
-                {senders.map((sender) => (
-                  <option key={sender.id} value={sender.name}>
-                    {sender.name}
+                {user.map((sender, i) => (
+                  <option key={i} value={sender.role}>
+                    {sender.role}
                   </option>
                 ))}
               </select>
@@ -315,8 +298,7 @@ export const MemoList = () => {
                       <span>THROUGH</span> : {memos?.through}
                     </p>
                     <p className="date">
-                      <span>DATE</span> :{" "}
-                      {memos?.date.split("T")[0] || "no date"}{" "}
+                      <span>DATE</span> : {memos?.date.split("T")[0]}
                       {memos?.createdAt}
                     </p>
                     <p className="pg">
@@ -331,7 +313,7 @@ export const MemoList = () => {
                         `<p className="cp">${memos?.content}</p>`
                       )}
                     </div>
-                    {memos?.files[0] !== [] && (
+                    {memos?.files[0].file_name !== "" && (
                       <div
                         className="content-attachement"
                         style={{ fontSize: "12px", marginBottom: "10px" }}
@@ -397,27 +379,7 @@ export const MemoList = () => {
                   <AddOutlined style={{ fontSize: "20px" }} />
                 </div>
               </div>
-              {comment?.map(
-                (comment, index) =>
-                  comment.memoId === memoId && (
-                    <div className="comment-details" key={index}>
-                      <div className="comment-top">
-                        <span className="cdate">
-                          Date: {comment.createdAt.split("T")[0] || "no date"}
-                        </span>
-                        <span>|</span>
-                        <span className="cid">
-                          Time: {comment.createdAt.split("T")[1].split(".")[0]}
-                        </span>
-                      </div>
-                      <span style={{ color: "#BD910E" }}>
-                        @{comment.receiver}
-                      </span>
-                      <span>{comment.comment.message}</span>
-                      <p>FROM: {comment.comment.from}</p>
-                    </div>
-                  )
-              )}
+              <CommentPdf data={c} />
             </div>
           </div>
         </div>

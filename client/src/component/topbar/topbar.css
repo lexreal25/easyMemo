@@ -9,6 +9,7 @@
 -webkit-box-shadow: 2px 4px 5px 0px rgba(230,214,214,0.75);
 -moz-box-shadow: 2px 4px 5px 0px rgba(230,214,214,0.75);
 }
+
 .topbarWrapper {
   height: 100%;
   padding: 0 20px;
@@ -16,13 +17,20 @@
   justify-content: space-between;
   align-items: center;
 }
+.topLeft{
+  display: flex;
+}
+.topLeft > img{
+  width: 40px;
+  height:40px;
+  object-fit: cover;
+  /* padding: 10px; */
+}
 .logo {
   font-weight: normal;
   font-family: "Times New Roman", Times, serif;
-  font-size: 15px;
-  font-style: italic;
+  font-size: 10px;
   color: orchid;
-  cursor: pointer;
 }
 .topbarIconContainer {
   position: relative;

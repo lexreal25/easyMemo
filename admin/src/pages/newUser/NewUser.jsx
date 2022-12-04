@@ -16,6 +16,8 @@ export const NewUser = () => {
     role: "",
     password: "",
   });
+  const [signature,setSign] = useState("");
+
   //  const dispatch = useDispatch();
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
@@ -27,6 +29,7 @@ export const NewUser = () => {
       state.lname ||
       state.role ||
       state.roleId ||
+      signature ||
       state.password !== ""
     ) {
       try {
@@ -41,7 +44,23 @@ export const NewUser = () => {
     } else {
       notify("Please complete all fields");
     }
-    setState({...state === ""})
+    setState({ ...(state === "") });
+  };
+  //usignature
+  const handleSignature = async (e) => {
+    e.preventDefault();
+    signature && success("uploading signature...");
+    const sig = new FormData();
+    sig.append("file", signature);
+    sig.append("upload_preset", "upload");
+    try {
+      const res = await axios.post(`${process.env.REACT_APP_CLOUDINARY}`, sig);
+      const { url } = res.data;
+      setSign(url)
+      success("upload successful!");
+    } catch (error) {
+      notify(error.response.data.error.message);
+    }
   };
   return (
     <div className="newUser">
@@ -90,8 +109,25 @@ export const NewUser = () => {
             type="file"
             name="signature"
             placeholder="upload signature"
-            onChange={handleChange}
+            onChange={(e) =>
+              setSign(e.target.files[0])
+            }
           />
+          <button
+            style={{
+              padding: "12px",
+              borderRadius: "5px",
+              marginTop: "5px",
+              backgroundColor: "teal",
+              border: "none",
+              cursor: "pointer",
+              color: "white",
+              fontWeight: 600,
+            }}
+            onClick={handleSignature}
+          >
+            CLICK TO UPLOAD
+          </button>
         </div>
         <div className="newUserItem">
           <label>Role ID</label>

@@ -1,0 +1,11 @@
+.notify {
+  position: relative;
+  background-color: #d94925;
+  padding: 2px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+.f1 {
+  color: white;
+  font-size: 12px;
+}

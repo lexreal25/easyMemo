@@ -6,6 +6,8 @@ import "./sentmemos.css";
 import "../../App.css";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import BasicCard from "../../component/table/Card";
+import { Message } from "../../component/noMemo/message";
 
 export const Sent = () => {
   const [sentmemos, setSentMemos] = useState([]);
@@ -23,7 +25,6 @@ export const Sent = () => {
   const filteredMemos = sentmemos.filter(
     (memo) => memo.from.replace(/ +/g, "").toLowerCase() === userkey
   );
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,7 +43,11 @@ export const Sent = () => {
     <div className="container">
       <Sidebar />
       <div className="sent">
-        <Table info={filteredMemos} />
+        {filteredMemos.length !== 0 ? (
+          <Table info={filteredMemos} />
+        ) : (
+          <Message />
+        )}
       </div>
     </div>
   );

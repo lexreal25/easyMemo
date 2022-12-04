@@ -5,8 +5,13 @@ import { Link } from "react-router-dom";
 export const Table = ({ info }) => {
   const columns = [
     {
+      field: "new",
+      headerName: "Status",
+      width: 80,
+    },
+    {
       field: "id",
-      headerName: "ID",
+      headerName: "Id",
       width: 150,
     },
     { field: "date", headerName: "Date", width: 100, type: "date" },
@@ -18,7 +23,6 @@ export const Table = ({ info }) => {
       sortable: false,
       width: 150,
     },
-    { field: "status", headerName: "Status", width: 80 },
     {
       field: "action",
       headerName: "Action",

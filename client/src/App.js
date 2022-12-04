@@ -32,7 +32,8 @@ function App() {
 
   return (
     <Router>
-      <Topbar />
+      <Topbar /> {/* <MiniDrawer />
+      */}
       <Routes>
         <Route path="/">
           <Route index element={<Received />} />

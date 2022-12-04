@@ -85,7 +85,6 @@ export const Memo = () => {
             );
             success("upload successful");
             let { url, original_filename } = uploadedFiles.data;
-            console.log(url);
             setUploadedFile(url);
             setFileName(original_filename);
           })
@@ -154,7 +153,7 @@ export const Memo = () => {
             },
           }
         );
-        
+
         success("Memo sent successfully");
       } catch (err) {
         notify(err.message);
@@ -280,7 +279,7 @@ export const Memo = () => {
                     key={user?.roleId}
                     value={user?.role}
                   >
-                    {user?.role.toUpperCase()}
+                    {user.role.toUpperCase()}
                   </option>
                 ))}
               </select>
@@ -294,7 +293,7 @@ export const Memo = () => {
                 name="copy"
               >
                 {users?.map((user) => (
-                  <option key={user?.roleId} value={user?.role}>
+                  <option key={user.roleId} value={user?.role}>
                     {user?.role.toUpperCase()}
                   </option>
                 ))}
@@ -309,7 +308,7 @@ export const Memo = () => {
                 name="through"
               >
                 {users?.map((user) => (
-                  <option key={user?.roleId} value={user?.role}>
+                  <option key={user.roleId} value={user.role}>
                     {user?.role.toUpperCase()}
                   </option>
                 ))}

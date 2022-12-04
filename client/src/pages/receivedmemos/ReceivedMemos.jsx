@@ -1,16 +1,20 @@
 import { useEffect } from "react";
 import { Sidebar } from "../../component/sidebar/Sidebar";
-import { Table } from "../../component/table/Table";
 import { useNavigate } from "react-router-dom";
-import "./received.css";
-import "../../App.css";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useState } from "react";
 import { allComments } from "../../redux/commentRedux";
 
+import "./received.css";
+import "../../App.css";
+import { Notification } from "../../component/notification/notification";
+import { Message } from "../../component/noMemo/message";
+import { Table } from "../../component/table/Table";
+
 export const Received = () => {
   const [memos, setMemos] = useState([]);
+  // const [count, setCount] = useState(10);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -36,7 +40,7 @@ export const Received = () => {
       setMemos(res.data);
     } catch (error) {}
   };
-  
+
   useEffect(() => {
     fetchData();
   }, [dispatch]);
@@ -57,13 +61,28 @@ export const Received = () => {
     };
     fetchComment();
   }, [dispatch]);
-
+  console.log(filteredMemos);
   return (
     <div className="container">
       <Sidebar />
       <div className="sent">
-        <Table info={filteredMemos} />
+        {filteredMemos.length !== 0 ? (
+          <Table info={filteredMemos} />
+        ) : (
+         <Message/>
+        )}
       </div>
+      {filteredMemos?.map((memo) =>
+        memo.status ==="Pending" ? (
+          <Notification
+            message={{
+              id: memo?.id,
+              sender: memo?.sender,
+              subject: memo?.subject,
+            }}
+          />
+        ) : null
+      )}
     </div>
   );
 };

@@ -1,12 +1,11 @@
 import "./settings.css";
-import avatar from "../../assets/avatar.png";
 import { BorderColor, PermIdentity } from "@material-ui/icons";
 import { Sidebar } from "../../component/sidebar/Sidebar";
 import { useSelector } from "react-redux";
 import "../../App.css";
 
 export const Settings = () => {
-  const { name, role, id } = useSelector((state) => state.user.currentUser);
+  const { fname, lname, role, id } = useSelector((state) => state.user.currentUser);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -23,9 +22,8 @@ export const Settings = () => {
         <div className="userContainer">
           <div className="userShow">
             <div className="userShowTop">
-              <img src={avatar} alt="" className="userShowImg" />
               <div className="userShowTopTitle">
-                <span className="userShowUsername">{name}</span>
+                <span className="userShowUsername">{fname +" "+ lname}</span>
                 <span className="userShowTitle">{role}</span>
               </div>
             </div>
@@ -46,22 +44,12 @@ export const Settings = () => {
             <form className="userUpdateForm">
               <div className="userUpdateLeft">
                 <div className="userUpdateItem">
-                  <label>ID</label>
-                  <input
-                    type="text"
-                    className="userUpdateInput"
-                    placeholder="User Id"
-                    defaultValue={id}
-                  />
-                </div>
-
-                <div className="userUpdateItem">
                   <label>Name</label>
                   <input
                     type="text"
                     className="userUpdateInput"
                     placeholder="Username"
-                    defaultValue={name}
+                    defaultValue={fname +" "+ lname}
                   />
                 </div>
                 <div className="userUpdateItem">

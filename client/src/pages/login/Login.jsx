@@ -61,26 +61,31 @@ export const Login = () => {
   );
   localStorage.setItem("userkey", userid);
   return (
-    <div className="back">
+    <div className="login-container">
+      <div className="side-img">heoo</div>
       <form className="login">
-        <p>EasyMemo</p>
+        <div>
+          <h2>SIGN IN</h2>
+          {/* <p>Enter your first name and password</p> */}
+        </div>
         <input
           type="text"
-          placeholder="Enter your firstname"
+          placeholder="Firstname in caps*"
           autoComplete="true"
           value={fname}
           onChange={(e) => setFname(e.target.value)}
         />
         <input
           type="password"
-          placeholder="Enter password"
-          autoComplete="true"
+          placeholder="Password *"
+          autoComplete="false"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit" className="loginBtn" onClick={handleSubmit}>
           LOGIN
         </button>
+        <span style={{marginTop:'15px',fontSize: "12px",fontFamily:'cursive',textDecoration:'underline'}}>Contact I.T to reset your password if forgotten.</span>
       </form>
       <ToastContainer
         position="bottom-right"

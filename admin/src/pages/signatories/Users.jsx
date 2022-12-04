@@ -14,7 +14,7 @@ export const Users = () => {
           token: "Bearer " + localStorage.getItem("token"),
         },
       });
-      setUsers(res.data)
+      console.log(res.data)
     };
     getUsers();
   }, []);
@@ -52,7 +52,7 @@ export const Users = () => {
 
 
   return (
-    <div style={{ height: "100vh", width: "100%" }}>
+    <div style={{ height: "100vh", width: "100%",flex: 4 }}>
       <DataGrid
         rows={users}
         columns={columns}

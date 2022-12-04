@@ -1,15 +1,19 @@
 import { Sidebar } from "../../component/sidebar/Sidebar";
 import "./pending.css";
 import "../../App.css";
-import { Table } from "../../component/table/Table";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import { Notification } from "../../component/notification/notification.js";
 import axios from "axios";
+import BasicCard from "../../component/table/Card";
+import { Message } from "../../component/noMemo/message";
+import { Table } from "../../component/table/Table";
 
 export const CopiedMemos = () => {
   const [copied, setCopied] = useState([]);
-  const dispatch = useDispatch();
+  const [count] = useState(1);
 
+  const dispatch = useDispatch();
   const userkey = localStorage.getItem("userkey");
 
   const filteredMemos = copied.filter(
@@ -17,7 +21,6 @@ export const CopiedMemos = () => {
       allmemos.copy.replace(/ +/g, "").toLowerCase() ||
       allmemos.through.replace(/ +/g, "").toLowerCase() === userkey
   );
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,10 +37,25 @@ export const CopiedMemos = () => {
 
   return (
     <div className="container">
-      <Sidebar />
+      <Sidebar msg={count} />
       <div className="pending">
-        <Table info={filteredMemos} />
+      {filteredMemos.length !== 0 ? (
+          <Table info={filteredMemos} />
+        ) : (
+         <Message/>
+        )}
       </div>
+      {filteredMemos?.map((memo) =>
+        memo.new ? (
+          <Notification
+            message={{
+              id: memo?.id,
+              sender: memo?.sender,
+              subject: memo?.subject,
+            }}
+          />
+        ) : null
+      )}
     </div>
   );
 };
