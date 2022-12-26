@@ -13,8 +13,6 @@ const columns = [
     description: "This column has a value getter and is not sortable.",
     sortable: false,
     width: 220,
-    //   valueGetter: (params) =>
-    //     `${params.row.title || ""} ${params.row.lastName || ""}`,
   },
   { field: "status", headerName: "Status", width: 90 },
   {
@@ -32,19 +30,6 @@ const columns = [
     },
   },
 ];
-
-// const style = {
-//   position: "absolute",
-//   top: "50%",
-//   left: "50%",
-//   transform: "translate(-50%, -50%)",
-//   width: 600,
-//   height: 400,
-//   bgcolor: "background.paper",
-//   border: "2px solid #000",
-//   boxShadow: 24,
-//   p: 4,
-// };
 
 export const Table = () => {
   return (
